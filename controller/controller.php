@@ -83,11 +83,9 @@ function getProductsByID($dbconn, $productID) {
 
 
 
-function displayErrors($error, $field)
-{
+function displayErrors($error, $field){
   $result= "";
-  if (isset($error[$field]))
-  {
+  if (isset($error[$field])){
     $result = '<span class="err">'.$error[$field].'</span>';
   }
   return $result;
@@ -183,8 +181,8 @@ function viewProducts($dbconn){
     echo "<td>".$record['maker']."</td>";
     echo "<td>".$record['category']."</td>";
     echo "<td>".$record['sub_category']."</td>";
-    echo "<td>".$record['price']."</td>";
-    echo "<td>".$record['old_price']."</td>";
+    echo "<td>#".$record['price']."</td>";
+    echo "<td>#".$record['old_price']."</td>";
     echo "<td>".$record['availability']."</td>";
     echo "<td>".$record['promo_status']."</td>";
     echo "<td><a href=\"editProductImage?product_id=".$record['hash_id']."\"><div style=\"background:url('".$record['file_path']."'); height
@@ -199,8 +197,6 @@ function viewProducts($dbconn){
 
 
 function viewSubCategories($dbconn){
-
-
 
   $stmt = $dbconn->prepare("SELECT * FROM sub_category");
   $stmt->execute();
@@ -249,7 +245,7 @@ function viewCategory($dbconn){
 
 function editCategory($dbconn, $post, $get){
 $id = getIdByHashId($dbconn,'category_id','category_id','category',$get['id']);
-;
+
   $stmt = $dbconn->prepare("UPDATE category SET category_name=:name WHERE category_id= :id");
 
   $stmt->bindParam(":name" , $post['category']);
@@ -313,16 +309,9 @@ $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id
   $cal = $stmt->fetch(PDO::FETCH_BOTH);
   extract($cal);
 
-
-
   return $product_name;
 
-
-
-
 }
-
-
 
 
 
@@ -342,8 +331,6 @@ $id = getIdByHashId($dbconn,'category_id','category_id','category',$get['id']);
 }
 
 function deleteSubCategory($dbconn, $get){
-
-
 
   $stmt= $dbconn->prepare("DELETE FROM sub_category WHERE hash_id=:id");
 
@@ -766,7 +753,7 @@ function fetchSideCategory($dbconn){
 
 
 function fetchProducts($dbconn,$get){
-  $stmt = $dbconn->prepare("")
+  $stmt = $dbconn->prepare("");
 }
 
 
