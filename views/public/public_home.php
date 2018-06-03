@@ -1,7 +1,13 @@
 <?php
+session_start();
 $page_title = "Home";
 ob_start();
 include 'includes/header.php';
+
+if(isset($_SESSION)){
+	$username = $_SESSION['username'];
+	$user_id = $_SESSION['id'];
+}
 ?>
 
 
@@ -28,6 +34,7 @@ include 'includes/header.php';
 				</div>
 			</li>
 		</ul>
+		
 	<!-- //main-slider -->
 	<!-- //top-header and slider -->
 	<!-- top-brands -->

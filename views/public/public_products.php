@@ -1,7 +1,12 @@
 <?php
 ob_start();
+session_start();
 include 'includes/header.php';
+if (isset($_GET["hid"])){
+	$hash_id = $_GET["hid"];
+ 	}
  ?>
+
 <!-- breadcrumbs -->
 	<div class="breadcrumbs">
 		<div class="container">
@@ -11,11 +16,11 @@ include 'includes/header.php';
 			</ol>
 		</div>
 	</div>
-<!-- //breadcrumbs -->
-<!--- pakagedfoods --->
+
 	<div class="products">
 		<div class="container">
 <?php include 'includes/category.php' ?>
+
 			<div class="col-md-8 products-right">
 				<div class="products-right-grid">
 					<div class="products-right-grids">
@@ -39,42 +44,7 @@ include 'includes/header.php';
 					</div>
 				</div>
 				<div class="agile_top_brands_grids">
-					<div class="col-md-4 top_brand_left">
-						<div class="hover14 column">
-							<div class="agile_top_brand_left_grid">
-								<div class="agile_top_brand_left_grid_pos">
-									<img src="images/offer.png" alt=" " class="img-responsive">
-								</div>
-								<div class="agile_top_brand_left_grid1">
-									<figure>
-										<div class="snipcart-item block">
-											<div class="snipcart-thumb">
-												<a href="single.html"><img title=" " alt=" " src="images/pf9.png"></a>
-												<p>Sampann-toor-dal</p>
-												<h4>$35.99 <span>$55.00</span></h4>
-											</div>
-											<div class="snipcart-details top_brand_home_details">
-												<form action="#" method="post">
-													<fieldset>
-														<input type="hidden" name="cmd" value="_cart">
-														<input type="hidden" name="add" value="1">
-														<input type="hidden" name="business" value=" ">
-														<input type="hidden" name="item_name" value="Fortune Sunflower Oil">
-														<input type="hidden" name="amount" value="35.99">
-														<input type="hidden" name="discount_amount" value="1.00">
-														<input type="hidden" name="currency_code" value="USD">
-														<input type="hidden" name="return" value=" ">
-														<input type="hidden" name="cancel_return" value=" ">
-														<input type="submit" name="submit" value="Add to cart" class="button">
-													</fieldset>
-												</form>
-											</div>
-										</div>
-									</figure>
-								</div>
-							</div>
-						</div>
-					</div>
+					<?php   showProducts($conn, $hash_id); ?>
 					<div class="col-md-4 top_brand_left">
 						<div class="hover14 column">
 							<div class="agile_top_brand_left_grid">

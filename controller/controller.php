@@ -505,16 +505,15 @@ function replaceImagePath($dbconn,$dest,$get){
 
 
 function doUserRegister($dbconn, $input){
-  $hash = password_hash($input['hash'], PASSWORD_BCRYPT);
+  $hash = password_hash($input['pword'], PASSWORD_BCRYPT);
 
 
-  $stmt =$dbconn->prepare("INSERT INTO users(firstname,lastname,email,username,password,hash) VALUES(:fname, :lname, :em, :uname, :pword, :h)");
+$stmt =$dbconn->prepare("INSERT INTO users(firstname,lastname,email,username,hash) VALUES(:fname, :lname, :em, :uname, :h)");
 
   $stmt->bindParam(":fname", $input['fname']);
   $stmt->bindParam(":lname", $input['lname']);
   $stmt->bindParam(":em", $input['email']);
   $stmt->bindParam(":uname", $input['uname']);
-  $stmt->bindParam(":pword", $input['pword']);
   $stmt->bindParam(":h", $hash);
 
   $stmt->execute();
@@ -525,7 +524,7 @@ function doUserRegister($dbconn, $input){
 }
 
 
-function UserLogin($dbconn, $input){
+function userLogin($dbconn, $input){
   $result = [];
   $stmt = $dbconn->prepare("SELECT * FROM users WHERE email = :e ");
   $stmt ->bindParam(":e", $input['email']);
@@ -535,6 +534,7 @@ function UserLogin($dbconn, $input){
     extract($row);
     $_SESSION['username'] = $username;
     $_SESSION['id'] = $user_id;
+    $_SESSION['email'] = $email;
     header("Location:/home");
   }else{
     $mes = "Invalid Email or Password";
@@ -625,14 +625,22 @@ function firstPreview($dbconn) {
   return $stmt->fetch(PDO::FETCH_BOTH)[0];
 }
 
-function addToCart($dbconn, $userID, $productID, $input){
-  $stmt = $dbconn->prepare("INSERT INTO cart(quantity, user_id, product_id) VALUES(:qu, :ui, :bi)");
+function addToCart($dbconn, $userID, $productID, $file, $product, $productPrice, $input){
+    $rnd = rand(000000000000,99999999999);
+  $hash_id = 'cart'.$rnd;
+  $stmt = $dbconn->prepare("INSERT INTO cart(quantity, hash_id, user_id, file_path, product_name, product_price, product_id) VALUES(:qu, :crt, :ui, :fp, :pn, :pp, :bi)");
 
   $data = [':qu'=> $input['quantity'],
+  ':crt' => $hash_id,
   ':ui' => $userID,
+  ':fp' => $file,
+  ':pn' => $product,
+  ':pp' => $productPrice,
   ':bi' => $productID,
+  
 ];
 $stmt->execute($data);
+header("Location:cart?user_id=$userID");
 }
 
 
@@ -681,11 +689,34 @@ function delCart($dbconn, $cart) {
 
 
 function selectFromCart($dbconn, $userID){
+
   $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id=:id");
   $stmt->bindParam(':id', $userID);
   $stmt->execute();
+  while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+    extract($row);
 
-  return $stmt;
+echo    "<tr class='rem1'>
+            <td class='invert'>".$cart_id."</td>
+            <td class='invert-image'><a href='single.html'><img src=".$file_path." alt=".$product_name." class='img-responsive' /></a></td>
+            <td class='invert'>
+               <div class='quantity'>
+                <input type='text' placeholder=".$quantity." name='quantity' size='3'>
+                <input type='submit' value='Update' name='update' class='button' size='3'>
+
+                </div>
+              </div>
+            </td>
+            <td class='invert'>".$product_name."</td>
+
+            <td class='invert'>#".$product_price."</td>
+            <td class='invert'>
+              <div class='rem'>
+                <div class='close1'> </div>
+              </div>
+            </td>
+          </tr>";
+  }  
 }
 
 
@@ -722,18 +753,98 @@ function ViewReview($dbconn, $productid) {
   }
   return $result;
 }
+function viewpreviewProduct($dbconn, $hid){
+  $stmt = $dbconn->prepare("SELECT * FROM product WHERE hash_id = :hid");
+  $stmt->bindParam(":hid", $hid);
+  $stmt -> execute();
+  $row = $stmt->fetch(PDO::FETCH_BOTH);
+  return $row;
+}
+
+function fetchPreviewProductroducts($dbconn, $hid){
+
+  $stmt = $dbconn->prepare("SELECT * FROM product WHERE hash_id = :hid");
+  $stmt->bindParam(":hid", $hid);
+  $stmt -> execute();
+
+  while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+          extract($row);
+
+  echo  "<div class='products'>
+            <div class='container'>
+              <div class='agileinfo_single'>
+
+              <div class='col-md-4 agileinfo_single_left'>
+                <img id='example' src=".$file_path." alt=".$product_name." class='img-responsive'>
+              </div>
+              <div class='col-md-8 agileinfo_single_right'>
+              <h2>".$product_name." </h2>
+                <div class='rating1'>
+                  <span class='starRating'>
+                    <input id='rating5' type='radio' name='rating' value='5'>
+                    <label for='rating5'>5</label>
+                    <input id='rating4' type='radio' name='rating' value='4'>
+                    <label for='rating4'>4</label>
+                    <input id='rating3' type='radio' name='rating' value='3' checked=''>
+                    <label for='rating3'>3</label>
+                    <input id='rating2' type='radio' name='rating' value='2'>
+                    <label for='rating2'>2</label>
+                    <input id='rating1' type='radio' name='rating' value='1'>
+                    <label for='rating1'>1</label>
+                  </span>
+                </div>
+                <div class='w3agile_description'>
+                  <h4>Description :</h4>
+                  <p>".$description.".</p>
+                </div>
+                <div class='snipcart-item block'>
+                  <div class='snipcart-thumb agileinfo_single_right_snipcart'>
+                    <h4 class='m-sing'># ".$price." <span># ".$old_price."</span></h4>
+                  </div>
+                  <div class='snipcart-details agileinfo_single_right_details'>";
+
+
+          
+  }
+
+} 
 
 function fetchSubCategory($dbconn,$cid){
-
   $stmt = $dbconn->prepare("SELECT * FROM sub_category WHERE category_id = $cid");
 
   $stmt->execute();
 
   while($row = $stmt->fetch(PDO::FETCH_BOTH)){
     extract($row);
-  echo '<li><a href="products.html"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$sub_category_name.'</a></li>';
+     // $product = fetchProducts($dbconn, $sub_category_id);
+    echo '<li><a href="/product?hid='.$sub_category_id.'"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$sub_category_name.'</a></li>';
+    // var_dump($hash_id);
   }
 }
+
+  function fetchMainCategory($dbconn){
+    $result = "";
+    $stmt = $dbconn->prepare("SELECT * FROM category");
+    $stmt->execute();
+      while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+      extract($row);
+        
+    echo  "<li class='dropdown'>";
+     echo "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>".$category_name."<b class='caret'></b></a>
+            <ul class='dropdown-menu multi-column columns-3'>
+                      <div class='row'>
+                        <div class='multi-gd-img'>
+                          <ul class='multi-column-dropdown'>
+                            <h6>".$category_name."</h6>";
+                            fetchSubCategory($dbconn, $category_id);
+       echo               "</ul>
+                        </div>
+                      </div>
+                    </ul>
+                </li>";
+    }
+    
+  }
 
 function fetchSideCategory($dbconn){
   $stmt = $dbconn->prepare("SELECT * FROM category");
@@ -742,19 +853,53 @@ function fetchSideCategory($dbconn){
     extract($row);
     $categCount = count($category_id);
     for($i=0; $i<$categCount;$i++){
-      echo '<li><a href="products.html"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$category_name.'</a></li>';
+      echo '<li><a href="#"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$category_name.'</a></li>';
       echo '<ul>';
-
       fetchSubCategory($dbconn,$category_id);
       echo '</ul>';
     }
   }
 }
 
+function showProducts($dbconn, $hid){
+    
+    $stmt = $dbconn->prepare("SELECT * FROM product WHERE sub_category = :hid");
+    $stmt ->bindParam(":hid", $hid);
+    $stmt -> execute();
+    while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+        extract($row);
+         echo   "<div class='col-md-4 top_brand_left'>";
+          echo   " <div class='hover14 column'>";
+           echo     "<div class='agile_top_brand_left_grid'>";
+            echo      "<div class=agile_top_brand_left_grid_pos>";
+            echo       " <img src='images/offer.png' alt='' class='img-responsive'>
+                            </div>
+                           <div class='agile_top_brand_left_grid1'>
+                             <figure>
+                                <div class='snipcart-item block'>
+                                  <div class='snipcart-thumb'> 
+                                   <img src=".$file_path." alt='' class='img-responsive'>
+                                    <p>".$product_name."</p>
+                                    <h4># ".$price." <span># ".$old_price."</span></h4>
+                                </div>
+                              <div class='snipcart-details top_brand_home_details'>
+                              <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Add to cart' class='button'></a>
+                                  </div>
+                                </div>
+                              </figure>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
 
-function fetchProducts($dbconn,$get){
-  $stmt = $dbconn->prepare("");
+
+    }
+    
 }
+
+
+
+
 
 
 ?>

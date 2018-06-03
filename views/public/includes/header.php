@@ -51,6 +51,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<li><a href="login">Login</a></li>
 					<li><a href="contact">Help</a></li>
 
+
 				</ul>
 			</div>
 			<div class="product_list_header">
@@ -106,7 +107,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<ul class="nav navbar-nav">
 									<li class="active"><a href="home" class="act">Home</a></li>
 									<!-- Mega Menu -->
-									<li class="dropdown">
+									<?php  fetchMainCategory($conn) ?>
+								<!-- 	<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Groceries<b class="caret"></b></a>
 										<ul class="dropdown-menu multi-column columns-3">
 											<div class="row">
@@ -124,8 +126,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 											</div>
 										</ul>
-									</li>
-									<li class="dropdown">
+									</li> -->
+									<!-- <li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Household<b class="caret"></b></a>
 										<ul class="dropdown-menu multi-column columns-3">
 											<div class="row">
@@ -201,11 +203,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 												</div>
 
 											</div>
-										</ul>
-									</li>
+										</ul> -->
+									<!-- </li> -->
 									<li><a href="gourmet.html">Gourmet</a></li>
 									<li><a href="offers.html">Offers</a></li>
-									<li><a href="contact.html">Contact</a></li>
+									<li><a href="contact">Contact</a></li>
 								</ul>
 							</div>
 							</nav>

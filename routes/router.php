@@ -36,7 +36,14 @@ $cart_id = NULL;
 if(isset($_GET['cart_id'])){
   $cart_id = $_GET['cart_id'];
 }
-
+  $hid = NULL;
+  if(isset($_GET['hid'])){
+    $hid = $_GET['hid'];
+  }
+  $user_id = NULL;
+  if(isset($_GET['user_id'])){
+    $user_id = $_GET['user_id'];
+  }
 
 
 
@@ -174,6 +181,10 @@ switch ($uri[1]) {
   include APP_PATH."/views/public/public_products.php";
   break;
 
+  case "product?hid=$hid":
+  include APP_PATH."/views/public/public_products.php";
+  break;
+
   case "contact":
   include APP_PATH."/views/public/public_contact.php";
   break;
@@ -182,7 +193,15 @@ switch ($uri[1]) {
   include APP_PATH."/views/public/public_login.php";
   break;
 
+  case "user_login?msg=$msg":
+  include APP_PATH."/views/public/public_login.php";
+  break;      
+
   case "register":
+  include APP_PATH."/views/public/public_register.php";
+  break;
+
+  case "users_registration?success=$success":
   include APP_PATH."/views/public/public_register.php";
   break;
 
@@ -190,7 +209,17 @@ switch ($uri[1]) {
   include APP_PATH."/views/public/public_cart.php";
   break;
 
+  
+  case "cart?user_id=$user_id":
+  include APP_PATH."/views/public/public_cart.php";
+  break;
+
+
   case "preview":
+  include APP_PATH."/views/public/public_preview.php";
+  break;
+
+  case "preview?hid=$hid":
   include APP_PATH."/views/public/public_preview.php";
   break;
 
