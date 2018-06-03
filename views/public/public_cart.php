@@ -6,7 +6,15 @@ include 'includes/header.php';
 
  if(isset($_GET['user_id'])){
  	$user_id = $_GET['user_id'];
+ 	$row = selectCart($conn, $user_id);
+ 	extract($row);
+ }elseif(isset($_SESSION)){
+ 	$user_id = $_SESSION['id'];
+ 	$row = selectCart($conn, $user_id);
+ 	extract($row);
  }
+
+ 
 
  ?>
  <!-- breadcrumbs -->
@@ -124,13 +132,13 @@ include 'includes/header.php';
  						   </script>
  						</td>
  					</tr> -->
- 					 		
+ 							
  				</table>
  			</div>
  			<div class='checkout-left'>
  				<div class='checkout-left-basket'>
  					<div class='snipcart-details top_brand_home_details'>
- 					<a href=''><input type='submit' class='button' value='Checkout' aria-hidden='true'></a>
+ 				<?php echo "<a href='checkout?user_id=".$user_id."&&cart_id=".$cart_id."'><input type='submit' class='button' value='Checkout' aria-hidden='true'></a>" ?>
  				</div>
  				</div>
  				<!-- <div class="checkout-left-basket">

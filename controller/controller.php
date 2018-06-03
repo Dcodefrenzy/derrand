@@ -535,6 +535,7 @@ function userLogin($dbconn, $input){
     $_SESSION['username'] = $username;
     $_SESSION['id'] = $user_id;
     $_SESSION['email'] = $email;
+    $_SESSION['fullname'] = $firstname." ".$lastname;
     header("Location:/home");
   }else{
     $mes = "Invalid Email or Password";
@@ -678,13 +679,11 @@ function culNav($page){
   }
 }
 
-function delCart($dbconn, $cart) {
+function delCart($dbconn, $userID) {
 
-  $stmt = $dbconn->prepare("DELETE FROM cart WHERE cart_id=:c");
-  $stmt->bindParam(":c", $cart);
+  $stmt = $dbconn->prepare("DELETE FROM cart WHERE user_id=:uid");
+  $stmt->bindParam(":uid", $userID);
   $stmt->execute();
-
-  header("Location:/cart");
 }
 
 
@@ -718,6 +717,17 @@ echo    "<tr class='rem1'>
           </tr>";
   }  
 }
+function selectCart($dbconn, $userID){
+
+  $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id=:id");
+  $stmt->bindParam(':id', $userID);
+  $stmt->execute();
+  $row = $stmt->fetch(PDO::FETCH_BOTH);
+    return $row;
+
+  }
+
+
 
 
 # function to view comment or review by a user
@@ -896,6 +906,65 @@ function showProducts($dbconn, $hid){
     }
     
 }
+function getProductsFromCart($dbconn, $userID){
+  $result = " ";
+  $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id = :uid");
+  $stmt->bindParam(":uid", $userID);
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_BOTH)){
+    extract($row);
+    //$result = implode(" ", $row);
+    $result .= "<p>".$product_name.", ".$file_path.", #".$product_price.", ".$product_id."</p>";
+    /*$count_result = count($result);
+    if($count_result < 0){
+      header("Location:home");
+    }*/
+    
+}
+return $result;
+
+}
+
+
+
+function addCheckout($dbconn, $userID, $input){
+  //Invocked get product from cart
+   $result = getProductsFromCart($dbconn, $userID);
+  $stmt = $dbconn->prepare("INSERT INTO checkout(name, phone_number, adress, product_info, user_id, date_added) VALUES(:na, :ph, :ad, :pi, :uid, NOW())");
+      $data = [
+        ':na' => $input['fname'],
+        ':ph' => $input['pnumber'],
+        ':ad' => $input['adress'],
+        ':pi' => $result,
+        ':uid' =>$userID,
+      ];
+      var_dump($data);
+      $stmt->execute($data);
+      $user_id = $userID;
+      header("Location:comfirmation?user_id=$user_id");
+  }
+
+
+  
+
+function displayCheckout($dbconn, $userID){
+  $total_price = 0;
+    $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id = :uid");
+  $stmt->bindParam(":uid", $userID);
+  $stmt->execute();
+  while($result = $stmt->fetch(PDO::FETCH_BOTH)){
+   
+    extract($result);
+    $total_price += $product_price;
+    $product_count = count($product_price);
+    for ($i=0; $i < $product_count ; $i++) { 
+
+      echo "<li>".$product_name." <i>-</i> <span>".$product_price." </span></li>";
+            
+    }
+  }
+}
+
 
 
 

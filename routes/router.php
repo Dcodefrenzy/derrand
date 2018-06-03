@@ -44,7 +44,10 @@ if(isset($_GET['cart_id'])){
   if(isset($_GET['user_id'])){
     $user_id = $_GET['user_id'];
   }
-
+   $cart_id = NULL;
+  if(isset($_GET['cart_id'])){
+    $cart_id = $_GET['cart_id'];
+  }
 
 
 switch ($uri[1]) {
@@ -225,6 +228,27 @@ switch ($uri[1]) {
 
   case "getSub":
   include APP_PATH."/views/public/get_sub_category.php";
+  break;
+
+  
+  case "checkout":
+  include APP_PATH."/views/public/public_home.php";
+  break;
+
+  case "checkout?user_id=$user_id&&cart_id=$cart_id":
+  include APP_PATH."/views/public/checkout.php";
+  break;
+
+
+
+
+  
+  case "comfirmation?user_id=$user_id":
+  include APP_PATH."/views/public/comfirmation.php";
+  break;
+
+  case "comfirmation":
+  include APP_PATH."/views/public/public_home.php";
   break;
 
 
