@@ -1,9 +1,15 @@
 <?php
 ob_start();
 session_start();
+$page_title = "products";
 include 'includes/header.php';
+
 if (isset($_GET["hid"])){
 	$hash_id = $_GET["hid"];
+	$show = showProducts($conn, $hash_id);
+ 	}else{
+ 		$show = showAllProducts($conn);
+
  	}
  ?>
 
@@ -44,8 +50,8 @@ if (isset($_GET["hid"])){
 					</div>
 				</div>
 				<div class="agile_top_brands_grids">
-					<?php   showProducts($conn, $hash_id); ?>
-					<div class="col-md-4 top_brand_left">
+					<?php echo $show;   ?>
+					<!-- <div class="col-md-4 top_brand_left">
 						<div class="hover14 column">
 							<div class="agile_top_brand_left_grid">
 								<div class="agile_top_brand_left_grid_pos">
@@ -349,7 +355,7 @@ if (isset($_GET["hid"])){
 						</div>
 					</div>
 						<div class="clearfix"> </div>
-				</div>
+				</div> -->
 				<nav class="numbering">
 					<ul class="pagination paging">
 						<li>

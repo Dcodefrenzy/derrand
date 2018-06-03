@@ -8,6 +8,9 @@ include 'includes/header.php';
  if(isset($_GET['user_id']) && ($_GET['cart_id'])){
  	$user_id = $_GET['user_id'];
  	$cart_id = $_GET['cart_id'];
+  if(!isset($_SESSION)){
+    header("Location:home?user_id=".$user_id."");
+  }
  }else{
  	header("Location:home");
  }

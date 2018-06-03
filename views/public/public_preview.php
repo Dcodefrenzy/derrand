@@ -3,9 +3,13 @@ ob_start();
 session_start();
 $page_title = "Preview";
 include 'includes/header.php';
-
-if(isset($_SESSION)){
+	
+if(!isset($_SESSION)){
+	$user_id ="id".rand(0000000000,9999999999);
+	
+}else{
 	$user_id = $_SESSION['id'];
+	 
 }
 if(isset($_GET['hid'])){
 	$hash_id = $_GET['hid'];

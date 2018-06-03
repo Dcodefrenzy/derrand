@@ -870,19 +870,17 @@ function fetchSideCategory($dbconn){
     }
   }
 }
-
-function showProducts($dbconn, $hid){
-    
-    $stmt = $dbconn->prepare("SELECT * FROM product WHERE sub_category = :hid");
-    $stmt ->bindParam(":hid", $hid);
+function showAllProducts($dbconn){
+   $result = " ";
+    $stmt = $dbconn->prepare("SELECT * FROM product");
     $stmt -> execute();
     while($row = $stmt->fetch(PDO::FETCH_BOTH)){
         extract($row);
-         echo   "<div class='col-md-4 top_brand_left'>";
-          echo   " <div class='hover14 column'>";
-           echo     "<div class='agile_top_brand_left_grid'>";
-            echo      "<div class=agile_top_brand_left_grid_pos>";
-            echo       " <img src='images/offer.png' alt='' class='img-responsive'>
+          $result .=   "<div class='col-md-4 top_brand_left'>";
+          $result .=   " <div class='hover14 column'>";
+            $result .=     "<div class='agile_top_brand_left_grid'>";
+            $result .=      "<div class=agile_top_brand_left_grid_pos>";
+            $result .=     "<a href='preview?hid=".$hash_id."'><img src='images/offer.png' alt='' class='img-responsive'></a>
                             </div>
                            <div class='agile_top_brand_left_grid1'>
                              <figure>
@@ -893,7 +891,42 @@ function showProducts($dbconn, $hid){
                                     <h4># ".$price." <span># ".$old_price."</span></h4>
                                 </div>
                               <div class='snipcart-details top_brand_home_details'>
-                              <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Add to cart' class='button'></a>
+                              <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
+                                  </div>
+                                </div>
+                              </figure>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
+                }
+              return $result;
+        }
+
+function showProducts($dbconn, $hid){
+    $result = " ";
+    $stmt = $dbconn->prepare("SELECT * FROM product WHERE sub_category = :hid");
+    $stmt ->bindParam(":hid", $hid);
+    $stmt -> execute();
+    while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+        extract($row);
+          $result .=   "<div class='col-md-4 top_brand_left'>";
+          $result .=   " <div class='hover14 column'>";
+          $result .=     "<div class='agile_top_brand_left_grid'>";
+          $result .=      "<div class=agile_top_brand_left_grid_pos>";
+          $result .= "<a href='preview?hid=".$hash_id."'><img src='images/offer.png' alt=".$product_name."  
+                        class='img-responsive'></a>
+                            </div>
+                           <div class='agile_top_brand_left_grid1'>
+                             <figure>
+                                <div class='snipcart-item block'>
+                                  <div class='snipcart-thumb'> 
+                                   <img src=".$file_path." alt='' class='img-responsive'>
+                                    <p>".$product_name."</p>
+                                    <h4># ".$price." <span># ".$old_price."</span></h4>
+                                </div>
+                              <div class='snipcart-details top_brand_home_details'>
+                              <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
                                   </div>
                                 </div>
                               </figure>
@@ -904,6 +937,7 @@ function showProducts($dbconn, $hid){
 
 
     }
+    return $result;
     
 }
 function getProductsFromCart($dbconn, $userID){
