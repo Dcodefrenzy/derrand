@@ -4,6 +4,10 @@ session_start();
 $page_title = "Login";
 include 'includes/header.php';
 
+if(isset($_GET['user_id'])){
+    $user_id = $_GET['user_id'];
+    
+    }
 
 $error =  []; 
 if(array_key_exists('login', $_POST)){
@@ -21,6 +25,8 @@ if(array_key_exists('login', $_POST)){
     userLogin($conn, $clean);
   }
 
+  update_user($conn, $user_id, $clean); 
+  header("Location:/home");  
 }
 
 

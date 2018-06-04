@@ -196,11 +196,23 @@ switch ($uri[1]) {
   include APP_PATH."/views/public/public_login.php";
   break;
 
+  
+
+   case "login?user_id=$user_id":
+  include APP_PATH."/views/public/public_login.php";
+  break;
+
+
   case "user_login?msg=$msg":
   include APP_PATH."/views/public/public_login.php";
   break;      
 
   case "register":
+  include APP_PATH."/views/public/public_register.php";
+  break;
+
+  
+   case "register?user_id=$user_id":
   include APP_PATH."/views/public/public_register.php";
   break;
 

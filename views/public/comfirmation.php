@@ -29,7 +29,7 @@ delCart($conn, $user_id);
  		<div class="container">
  			<h2>Comfirmation</h2>
  			<div class="login-form-grids">
- 			<p>Dear, <?php echo "<b>".$fullname."</b>" ?> We are please to inform you that your purchase is successful, please check your email for more infomations</p>
+ 			<p>Dear, <?php echo "<b>".$fullname."</b>" ?> We are please to inform you that your purchase is successful, please check your email for more information</p>
  				
  					
  			</div>

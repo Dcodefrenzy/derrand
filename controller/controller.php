@@ -504,17 +504,18 @@ function replaceImagePath($dbconn,$dest,$get){
 
 
 
-function doUserRegister($dbconn, $input){
+function doUserRegister($dbconn, $input, $hid){
   $hash = password_hash($input['pword'], PASSWORD_BCRYPT);
 
 
-$stmt =$dbconn->prepare("INSERT INTO users(firstname,lastname,email,username,hash) VALUES(:fname, :lname, :em, :uname, :h)");
+$stmt =$dbconn->prepare("INSERT INTO users(firstname,lastname,email,username,hash, hash_id) VALUES(:fname, :lname, :em, :uname, :h, :hid)");
 
   $stmt->bindParam(":fname", $input['fname']);
   $stmt->bindParam(":lname", $input['lname']);
   $stmt->bindParam(":em", $input['email']);
   $stmt->bindParam(":uname", $input['uname']);
   $stmt->bindParam(":h", $hash);
+  $stmt->bindParam(":hid", $hid);
 
   $stmt->execute();
 
@@ -536,12 +537,22 @@ function userLogin($dbconn, $input){
     $_SESSION['id'] = $user_id;
     $_SESSION['email'] = $email;
     $_SESSION['fullname'] = $firstname." ".$lastname;
-    header("Location:/home");
+    $_SESSION['hash_id'] = $hash_id;
+    
   }else{
     $mes = "Invalid Email or Password";
     $message = preg_replace('/\s+/', '_', $mes);
     header("Location:/user_login?msg=$message");
   }
+}
+
+function update_user($dbconn, $hid, $input){
+  $stmt= $dbconn->prepare("UPDATE users SET hash_id = :hid WHERE email = :em");
+  $data = [
+        ':hid'=>$hid,
+        ':em'=>$input['email'],
+  ];
+  $stmt->execute($data);
 }
 
 function bestSellingProduct($dbconn){
@@ -655,6 +666,12 @@ function displayErrorsUser($dummy, $what) {
   }
   return $result;
 }
+ function updateCart($dbconn, $input, $hid){
+  $stmt = $dbconn->prepare("UPDATE cart SET user_id=:ui WHERE user_id= :hid");
+  $stmt->bindParam(":ui", $input);
+  $stmt->bindParam(":hid", $hid);
+  $stmt->execute();
+ }
 
 #function for editing items in the cart
 function editCart($dbconn, $cart){
@@ -993,10 +1010,12 @@ function displayCheckout($dbconn, $userID){
     $product_count = count($product_price);
     for ($i=0; $i < $product_count ; $i++) { 
 
-      echo "<li>".$product_name." <i>-</i> <span>".$product_price." </span></li>";
+      echo "<li>".$product_name." <i>-</i> <span>#".$product_price." </span></li>";
             
     }
+
   }
+  echo "<li><h5>Total <i>-</i> <span>#".$total_price."</span></h5></li>";
 }
 
 

@@ -3,19 +3,22 @@ session_start();
 ob_start();
 $page_title = "Cart";
 include 'includes/header.php';
+$empty_cart= "";
 
  if(isset($_GET['user_id'])){
  	$user_id = $_GET['user_id'];
  	$row = selectCart($conn, $user_id);
  	extract($row);
- }elseif(isset($_SESSION)){
+ 	}elseif(isset($_SESSION['id'])){
  	$user_id = $_SESSION['id'];
- 	$row = selectCart($conn, $user_id);
+ 	if($row = selectCart($conn, $user_id)){
  	extract($row);
+
+ 	}else {
+ 		$empty_cart = "<a href='product'>You Do not have any cart, click here to add to cart</a>";
+ 	}
  }
-
  
-
  ?>
  <!-- breadcrumbs -->
  	<div class="breadcrumbs">
@@ -31,6 +34,7 @@ include 'includes/header.php';
  	<div class="checkout">
  		<div class="container">
  			<h2>Your shopping cart contains: <span>3 Products</span></h2>
+ 			<?php echo '<p>'.$empty_cart.'</p>'; ?>
  			<div class="checkout-right">
  				<table class="timetable_sub">
  					<thead>

@@ -2,6 +2,14 @@
 ob_start();
 $page_title = "Register";
 include 'includes/header.php';
+$do_login = " ";
+if(isset($_GET['user_id'])){
+  $hash_id = $_GET['user_id'];
+  //for those who have account.
+  //$do_login = "<a href='login?user_id=".$user_id."Already have any account? click here</a>";
+}else{
+  $hash_id = "id".rand(0000000000,9999999999);
+}
 
 $error= [];
 
@@ -41,17 +49,20 @@ if(array_key_exists('register', $_POST)){
 
   if(empty($error)){
     $clean = array_map('trim', $_POST);
-    doUserRegister($conn, $clean);
+    doUserRegister($conn, $clean, $hash_id);
+
   }
+  userLogin($conn, $clean);
 }
 
 ?>
  
+
  <!-- breadcrumbs -->
  	<div class="breadcrumbs">
  		<div class="container">
  			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
- 				<li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+ 				<?php echo "<li><a href=login?user_id=".$user_id."><span class='glyphicon glyphicon-home' aria-hidden='true'></span>Have an Account? <b>Login Here</b></a></li>"; ?>
  				<li class="active">Register Page</li>
  			</ol>
  		</div>

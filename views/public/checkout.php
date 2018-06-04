@@ -4,13 +4,13 @@ ob_start();
 $page_title = "Checkout";
 include 'includes/header.php';
 
-	
+	if(!isset($_SESSION['id'])){
+    header("Location:register?user_id=".$user_id."");
+  }
  if(isset($_GET['user_id']) && ($_GET['cart_id'])){
  	$user_id = $_GET['user_id'];
  	$cart_id = $_GET['cart_id'];
-  if(!isset($_SESSION)){
-    header("Location:home?user_id=".$user_id."");
-  }
+  
  }else{
  	header("Location:home");
  }
@@ -64,7 +64,6 @@ include 'includes/header.php';
  					<h4>Continue to basket</h4>
  					<ul>
  						<?php displayCheckout($conn, $user_id); ?>
- 						<li>Total <i>-</i> <span><?php ".$total_price." ?></span></li>";
  					</ul>
  				</div>
  			<div class="login-form-grids">
