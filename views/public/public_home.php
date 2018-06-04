@@ -1,16 +1,20 @@
 <?php
-session_start();
-$page_title = "Home";
 ob_start();
+$page_title = "Home";
+include 'includes/header.php';
+$hash_id = $sid;
 
-if(isset($_SESSION['username']) && ($_SESSION['id']) && ($_SESSION['hash_id'])){
+if(isset($_SESSION['username']) && ($_SESSION['id'])){
 	$username = $_SESSION['username'];
 	$user_id = $_SESSION['id'];
-	$hash_id =$_SESSION['hash_id'];
+	
+	updateCart($conn, $user_id, $hash_id);
 }
 
-include 'includes/header.php';
-updateCart($conn, $user_id, $hash_id);
+
+
+
+
 ?>
 
 

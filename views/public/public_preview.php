@@ -1,11 +1,10 @@
 <?php
 ob_start();
-session_start();
 $page_title = "Preview";
 include 'includes/header.php';
 	
 if(!isset($_SESSION['id'])){
-	$user_id ="id".rand(0000000000,9999999999);
+	$user_id = $sid;
 	
 }else{
 	$user_id = $_SESSION['id'];

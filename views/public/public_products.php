@@ -1,6 +1,5 @@
 <?php
 ob_start();
-session_start();
 $page_title = "products";
 include 'includes/header.php';
 

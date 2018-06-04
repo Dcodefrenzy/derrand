@@ -1,14 +1,13 @@
 <?php
-session_start();
 ob_start();
 $page_title = "Checkout";
 include 'includes/header.php';
 
 	if(!isset($_SESSION['id'])){
-    header("Location:register?user_id=".$user_id."");
+    header("Location:register");
   }
- if(isset($_GET['user_id']) && ($_GET['cart_id'])){
- 	$user_id = $_GET['user_id'];
+ elseif(isset($_SESSION['id']) && ($_GET['cart_id'])){
+ 	$user_id = $_SESSION['id'];
  	$cart_id = $_GET['cart_id'];
   
  }else{

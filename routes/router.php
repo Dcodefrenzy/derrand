@@ -247,7 +247,7 @@ switch ($uri[1]) {
   include APP_PATH."/views/public/public_home.php";
   break;
 
-  case "checkout?user_id=$user_id&&cart_id=$cart_id":
+  case "checkout?cart_id=$cart_id":
   include APP_PATH."/views/public/checkout.php";
   break;
 

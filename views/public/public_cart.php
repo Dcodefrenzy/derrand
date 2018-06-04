@@ -1,24 +1,26 @@
 <?php
-session_start();
 ob_start();
 $page_title = "Cart";
 include 'includes/header.php';
 $empty_cart= "";
 
- if(isset($_GET['user_id'])){
- 	$user_id = $_GET['user_id'];
- 	$row = selectCart($conn, $user_id);
- 	extract($row);
- 	}elseif(isset($_SESSION['id'])){
- 	$user_id = $_SESSION['id'];
+ if(!isset($_SESSION['id'])){
+ 	$user_id = $sid;
  	if($row = selectCart($conn, $user_id)){
  	extract($row);
-
- 	}else {
- 		$empty_cart = "<a href='product'>You Do not have any cart, click here to add to cart</a>";
+ 	
  	}
- }
+ }elseif(isset($_SESSION['id'])){
+ 	$user_id = $_SESSION['id'];
+ 	
+ 		if($row = selectCart($conn, $user_id)){
+ 		extract($row);
+ 		}
+	}else{
+ 		$empty_cart = "<a href='product'>You Do not have any cart, click here to add to cart</a>";
+ 	}	
  
+
  ?>
  <!-- breadcrumbs -->
  	<div class="breadcrumbs">
@@ -49,6 +51,7 @@ $empty_cart= "";
  						</tr>
  					</thead>
  					<?php selectFromCart($conn, $user_id); ?>
+ 					
  					<!-- <tr class="rem1">
  						<td class="invert">1</td>
  						<td class="invert-image"><a href="single.html"><img src="images/1.png" alt=" " class="img-responsive" /></a></td>
@@ -142,7 +145,7 @@ $empty_cart= "";
  			<div class='checkout-left'>
  				<div class='checkout-left-basket'>
  					<div class='snipcart-details top_brand_home_details'>
- 				<?php echo "<a href='checkout?user_id=".$user_id."&&cart_id=".$cart_id."'><input type='submit' class='button' value='Checkout' aria-hidden='true'></a>" ?>
+ 				<?php echo "<a href='checkout?cart_id=".$cart_id."'><input type='submit' class='button' value='Checkout' aria-hidden='true'></a>" ?>
  				</div>
  				</div>
  				<!-- <div class="checkout-left-basket">

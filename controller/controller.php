@@ -453,8 +453,6 @@ $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id
 function editProducts($dbconn,$post,$get){
   $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id']);
 
-  // die(var_dump($id));
-
   $stmt = $dbconn->prepare("UPDATE product SET product_name=:pname, maker=:maker, description=:descr,category=:cat,sub_category=:subcat, availability=:av, promo_status=:prost, price=:pr, old_price=:opr,  flag=:flg WHERE product_id =:id");
 
   $data = [
@@ -491,7 +489,7 @@ function doesUserEmailExist($dbconn, $input){ #placeholders are just there
 function replaceImagePath($dbconn,$dest,$get){
   $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id']);
 
-  // die(var_dump($id));
+  
   $stmt = $dbconn->prepare("UPDATE product SET file_path=:des WHERE product_id =:id");
   $data = [
     ':id' => $id,
@@ -652,7 +650,7 @@ function addToCart($dbconn, $userID, $productID, $file, $product, $productPrice,
   
 ];
 $stmt->execute($data);
-header("Location:cart?user_id=$userID");
+header("Location:cart");
 }
 
 
@@ -845,7 +843,7 @@ function fetchSubCategory($dbconn,$cid){
     extract($row);
      // $product = fetchProducts($dbconn, $sub_category_id);
     echo '<li><a href="/product?hid='.$sub_category_id.'"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$sub_category_name.'</a></li>';
-    // var_dump($hash_id);
+   
   }
 }
 
@@ -989,7 +987,6 @@ function addCheckout($dbconn, $userID, $input){
         ':pi' => $result,
         ':uid' =>$userID,
       ];
-      var_dump($data);
       $stmt->execute($data);
       $user_id = $userID;
       header("Location:comfirmation?user_id=$user_id");

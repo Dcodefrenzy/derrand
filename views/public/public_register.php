@@ -2,14 +2,8 @@
 ob_start();
 $page_title = "Register";
 include 'includes/header.php';
-$do_login = " ";
-if(isset($_GET['user_id'])){
-  $hash_id = $_GET['user_id'];
-  //for those who have account.
-  //$do_login = "<a href='login?user_id=".$user_id."Already have any account? click here</a>";
-}else{
-  $hash_id = "id".rand(0000000000,9999999999);
-}
+
+$hash_id = $sid;
 
 $error= [];
 

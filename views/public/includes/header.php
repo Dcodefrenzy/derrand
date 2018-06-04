@@ -4,6 +4,10 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+<?php 
+session_start();
+$sid = md5(session_id());
+ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,7 +52,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<div class="agile-login">
 				<ul>
 					<li><a href="register"> Create Account </a></li>
-					<?php echo "<li><a href='login?user_id=".$user_id."'>Login</a></li>" ?>
+					<li><a href='login'>Login</a></li>
 					<li><a href="contact">Help</a></li>
 
 

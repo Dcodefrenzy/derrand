@@ -1,13 +1,9 @@
 <?php
 ob_start();
-session_start();
 $page_title = "Login";
 include 'includes/header.php';
 
-if(isset($_GET['user_id'])){
-    $user_id = $_GET['user_id'];
-    
-    }
+  $user_id = $sid;
 
 $error =  []; 
 if(array_key_exists('login', $_POST)){
@@ -45,7 +41,6 @@ if(array_key_exists('login', $_POST)){
  	<div class="login">
  		<div class="container">
  			<h2>Login Form</h2>
-
  			<div class="login-form-grids animated wow slideInUp" data-wow-delay=".5s">
  				<form method="POST">
  					<?php $display = displayErrors($error, 'fname'); echo $display; ?>
