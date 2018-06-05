@@ -4,6 +4,10 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+<?php 
+session_start();
+$sid = md5(session_id());
+ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,17 +52,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<div class="agile-login">
 				<ul>
 					<li><a href="register"> Create Account </a></li>
-					<li><a href="login">Login</a></li>
+					<li><a href='login'>Login</a></li>
 					<li><a href="contact">Help</a></li>
+
 
 				</ul>
 			</div>
 			<div class="product_list_header">
-					<form action="#" method="post" class="last">
-						<input type="hidden" name="cmd" value="_cart">
-						<input type="hidden" name="display" value="1">
-						<button class="w3view-cart" type="submit" name="submit" value=""><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
-					</form>
+		<?php echo '<a href="cart"><button class="w3view-cart" type="submit" name="submit" value=""><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>' ?>
 			</div>
 			<div class="clearfix"> </div>
 		</div>
@@ -106,7 +107,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<ul class="nav navbar-nav">
 									<li class="active"><a href="home" class="act">Home</a></li>
 									<!-- Mega Menu -->
-									<li class="dropdown">
+									<?php  fetchMainCategory($conn) ?>
+								<!-- 	<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Groceries<b class="caret"></b></a>
 										<ul class="dropdown-menu multi-column columns-3">
 											<div class="row">
@@ -124,8 +126,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 											</div>
 										</ul>
-									</li>
-									<li class="dropdown">
+									</li> -->
+									<!-- <li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Household<b class="caret"></b></a>
 										<ul class="dropdown-menu multi-column columns-3">
 											<div class="row">
@@ -201,11 +203,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 												</div>
 
 											</div>
-										</ul>
-									</li>
+										</ul> -->
+									<!-- </li> -->
 									<li><a href="gourmet.html">Gourmet</a></li>
 									<li><a href="offers.html">Offers</a></li>
-									<li><a href="contact.html">Contact</a></li>
+									<li><a href="contact">Contact</a></li>
 								</ul>
 							</div>
 							</nav>

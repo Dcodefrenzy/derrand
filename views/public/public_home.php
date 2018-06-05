@@ -1,7 +1,20 @@
 <?php
-$page_title = "Home";
 ob_start();
+$page_title = "Home";
 include 'includes/header.php';
+$hash_id = $sid;
+
+if(isset($_SESSION['username']) && ($_SESSION['id'])){
+	$username = $_SESSION['username'];
+	$user_id = $_SESSION['id'];
+	
+	updateCart($conn, $user_id, $hash_id);
+}
+
+
+
+
+
 ?>
 
 
@@ -28,6 +41,7 @@ include 'includes/header.php';
 				</div>
 			</li>
 		</ul>
+		
 	<!-- //main-slider -->
 	<!-- //top-header and slider -->
 	<!-- top-brands -->
