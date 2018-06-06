@@ -674,6 +674,7 @@ function displayErrorsUser($dummy, $what) {
   $stmt->bindParam(":ui", $input);
   $stmt->bindParam(":hid", $hid);
   $stmt->execute();
+  header("Location:cart=".$user_id."");
  }
 
 #function for editing items in the cart
