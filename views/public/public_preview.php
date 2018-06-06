@@ -2,21 +2,21 @@
 ob_start();
 $page_title = "Preview";
 include 'includes/header.php';
-	
+
 if(!isset($_SESSION['id'])){
 	$user_id = $sid;
-	
+
 }else{
 	$user_id = $_SESSION['id'];
-	 
+
 }
-	
-	
+
+
 if(isset($_GET['hid'])){
 	$hash_id = $_GET['hid'];
 
 	 $result = viewpreviewProduct($conn, $hash_id);
-	 extract($result); 
+	 extract($result);
 
 	$error = [];
 
@@ -31,7 +31,7 @@ if(isset($_GET['hid'])){
 			$clean = array_map('trim', $_POST);
 			$total_price = $clean['quantity'] * $price;
 
-			addToCart($conn, $user_id, $hash_id, $product_name, $total_price, $clean);
+			addToCart($conn, $user_id, $hash_id, $product_name, $total_price,$price, $clean);
 		}
 	}
 }
@@ -46,7 +46,7 @@ if(isset($_GET['hid'])){
  		</div>
  	</div>
  	<?php fetchPreviewProductroducts($conn, $hash_id) ?>
-       				<form  method="post">						
+       				<form  method="post">
 						<input type="number" name="quantity" placeholder="Quantity" required="" size="5"><br/><br/>
 						<input type="submit" name="submit" value="Add to cart" class="button">
 					</form>

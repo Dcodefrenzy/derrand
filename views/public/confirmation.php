@@ -2,17 +2,16 @@
 ob_start();
 $page_title = "Register";
 include 'includes/header.php';
-if(isset($_SESSION['fullname']) && $_SESSION['id']){
-  $fullname = $_SESSION['fullname'];
+if(isset($_SESSION['id'])){
   $user_id = $_SESSION['id'];
 }
 else{
   $user_id = $sid;
 }
-delCart($conn, $user_id);
+delALLCart($conn, $user_id);
 
 ?>
- 
+
  <!-- breadcrumbs -->
  	<div class="breadcrumbs">
  		<div class="container">
@@ -29,8 +28,8 @@ delCart($conn, $user_id);
  			<h2>Comfirmation</h2>
  			<div class="login-form-grids">
  			<p>Dear, <?php echo "<b>".$fullname."</b>" ?> We are please to inform you that your purchase is successful, please check your email for more information</p>
- 				
- 					
+
+
  			</div>
  			<div class="register-home">
  				<a href="home">Home</a>

@@ -4,12 +4,6 @@ $page_title = "Home";
 include 'includes/header.php';
 $hash_id = $sid;
 
-if(isset($_SESSION['username']) && ($_SESSION['id'])){
-	$username = $_SESSION['username'];
-	$user_id = $_SESSION['id'];
-	
-	updateCart($conn, $user_id, $hash_id);
-}
 
 
 
@@ -41,7 +35,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 				</div>
 			</li>
 		</ul>
-		
+
 	<!-- //main-slider -->
 	<!-- //top-header and slider -->
 	<!-- top-brands -->
@@ -66,7 +60,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 									 <div class="agile_top_brand_left_grid">
 											 <div class="agile_top_brand_left_grid_pos">
 												<img src="images/offer.png" alt=" " class="img-responsive" />
-											</div> 
+											</div>
 											<div class="agile_top_brand_left_grid1">
 												<figure>
 													<div class="snipcart-item block">
@@ -101,7 +95,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 													</div>
 												</figure>
 											</div>
-										</div> 
+										</div>
 									</div>
 								</div>
 								<div class="clearfix"> </div>
@@ -117,7 +111,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 												<figure>
 													<div class="snipcart-item block" >
 														<div class="snipcart-thumb">
-															<a href="products.html"><img title=" " alt=" " src="images/4.png" /></a>		
+															<a href="products.html"><img title=" " alt=" " src="images/4.png" /></a>
 															<p>Sampann-toor-dal</p>
 															<div class="stars">
 																<i class="fa fa-star blue-star" aria-hidden="true"></i>
@@ -150,12 +144,12 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 										</div>
 									</div>
 								</div>  -->
-							
+
 								<?php  userDisplayTopSelling($conn) ?>
 								<div class="clearfix"> </div>
-								
+
 							</div>
-						</div> 
+						</div>
 						<div role="tabpanel" class="tab-pane fade" id="tours" aria-labelledby="tours-tab">
 							<div class="agile-tp">
 								<h5>This week</h5>
@@ -172,7 +166,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 												<figure>
 													<div class="snipcart-item block" >
 														<div class="snipcart-thumb">
-															<a href="products.html"><img title=" " alt=" " src="images/7.png" /></a>		
+															<a href="products.html"><img title=" " alt=" " src="images/7.png" /></a>
 															<p>Sona-masoori-rice</p>
 															<div class="stars">
 																<i class="fa fa-star blue-star" aria-hidden="true"></i>
@@ -215,7 +209,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 												<figure>
 													<div class="snipcart-item block" >
 														<div class="snipcart-thumb">
-															<a href="products.html"><img title=" " alt=" " src="images/8.png" /></a>		
+															<a href="products.html"><img title=" " alt=" " src="images/8.png" /></a>
 															<p>Milky-mist-paneer</p>
 															<div class="stars">
 																<i class="fa fa-star blue-star" aria-hidden="true"></i>
@@ -307,7 +301,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 												<figure>
 													<div class="snipcart-item block" >
 														<div class="snipcart-thumb">
-															<a href="products.html"><img title=" " alt=" " src="images/10.png" /></a>		
+															<a href="products.html"><img title=" " alt=" " src="images/10.png" /></a>
 															<p>Fortune-sunflower</p>
 															<div class="stars">
 																<i class="fa fa-star blue-star" aria-hidden="true"></i>
@@ -350,7 +344,7 @@ if(isset($_SESSION['username']) && ($_SESSION['id'])){
 												<figure>
 													<div class="snipcart-item block" >
 														<div class="snipcart-thumb">
-															<a href="products.html"><img title=" " alt=" " src="images/12.png" /></a>		
+															<a href="products.html"><img title=" " alt=" " src="images/12.png" /></a>
 															<p>Nestle-a-slim</p>
 															<div class="stars">
 																<i class="fa fa-star blue-star" aria-hidden="true"></i>

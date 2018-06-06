@@ -1,7 +1,7 @@
 <?php
-    define("DBNAME", 'derrand');
+    define("DBNAME", 'ecommerce');
     define("DBUSER", 'root');
-    define("DBPASS", 'dre');
+    define("DBPASS", 'koda');
 
         try{
 

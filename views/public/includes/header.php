@@ -4,19 +4,21 @@ author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php 
+<?php
 $welcome = "";
 session_start();
 $sid = md5(session_id());
 $cart_numb = 0;
-if(isset($_SESSION['fullname']) && ($_SESSION['id'])){
- 	$fullname = $_SESSION['fullname'];
+if(isset($_SESSION['username']) && ($_SESSION['id'])){
+ 	$fullname = $_SESSION['username'];
  	$user_id = $_SESSION['id'];
  	$welcome ="<li><a href=''>welcome ".$fullname."</a></li>";
 
- 	$cart_numb = getCart($conn, $user_id);	
- 		
- }
+ 	$cart_numb = getCart($conn, $user_id);
+
+}else{
+  $cart_numb = getCart($conn, $sid);
+}
 
  ?>
 
@@ -64,16 +66,24 @@ if(isset($_SESSION['fullname']) && ($_SESSION['id'])){
 			</div>
 			<div class="agile-login">
 				<ul>
-					<?php echo $welcome; ?>
-					<li><a href="register"> Create Account </a></li>
-					<li><a href='login'>Login</a></li>
-					<li><a href="contact">Help</a></li>
+					<?php
+if(isset($_SESSION['id']) && isset($_SESSION['username'])){
 
+          echo $welcome; ?>
+
+
+
+        <?php }else{ ?>
+          <li><a href="register"> Create Account </a></li>
+          <li><a href='login'>Login</a></li>
+
+        <?php } ?>
+<li><a href="contact">Help</a></li>
 
 				</ul>
 			</div>
 			<div class="product_list_header">
-		<?php echo "<li><a href='cart'>".$cart_numb."</a><a href='cart'><button class='w3view-cart' type='submit' name='submit' value=''><i class='fa fa-cart-arrow-down' aria-hidden='true'></i></button></a></li>" ?>
+		<?php echo "<li ><a class=\"badge-danger\" href='cart'>".$cart_numb."</a><a href='cart'><button class='w3view-cart' type='submit' name='submit' value=''><i class='fa fa-cart-arrow-down' aria-hidden='true'></i></button></a></li>" ?>
 			</div>
 			<div class="clearfix"> </div>
 		</div>
@@ -90,7 +100,7 @@ if(isset($_SESSION['fullname']) && ($_SESSION['id'])){
 			<div class="w3ls_logo_products_left">
 				<h1><a href="home">super Market</a></h1>
 			</div>
-		<div class="w3l_search">
+		<!-- <div class="w3l_search">
 			<form action="#" method="post">
 				<input type="search" name="Search" placeholder="Search for a Product..." required="">
 				<button type="submit" class="btn btn-default search" aria-label="Left Align">
@@ -98,7 +108,7 @@ if(isset($_SESSION['fullname']) && ($_SESSION['id'])){
 				</button>
 				<div class="clearfix"></div>
 			</form>
-		</div>
+		</div> -->
 
 			<div class="clearfix"> </div>
 		</div>
