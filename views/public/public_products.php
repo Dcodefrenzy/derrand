@@ -2,15 +2,47 @@
 ob_start();
 $page_title = "products";
 include 'includes/header.php';
+$record_per_page = 6;
+$page = "";
+if(isset($_GET['page'])){
+	$page = $_GET['page'];
+}else{
+	$page = 1;
+}
+
+$start_from = ($page-1)*$record_per_page;
+
 
 if (isset($_GET["hid"])){
 	$hash_id = $_GET["hid"];
-	$show = showProducts($conn, $hash_id);
- 	}else{
- 		$show = showAllProducts($conn);
+	$show = showProducts($conn, $hash_id, $start_from, $record_per_page);
+	$pargination = getPagination($conn, $hash_id, $record_per_page);
+	 $total_record = getTotalRecordForProductId($conn, $hid,  $record_per_page);
 
+ 	}else{
+ 		$show = showAllProducts($conn, $start_from, $record_per_page);
+ 		$pargination = getPaginationForAllProduct($conn,  $record_per_page);
+ 		//to get total records
+ 	 $total_record = getTotalRecord($conn,  $record_per_page);
  	}
- ?>
+ 	
+
+ 	 //to get total record where category_id = id.
+ 	 
+ 		
+ 		
+ 		if($page > 1){
+ 			$prev = $page - 1;
+ 		}else{
+ 			$prev = 1;
+ 		}
+ 		if($total_record > 1 &&  $page != $total_record){
+ 			$next = $page + 1;
+ 		}
+ 		else{
+ 			$next = $total_record;
+ 		}
+?>
 
 <!-- breadcrumbs -->
 	<div class="breadcrumbs">
@@ -339,8 +371,9 @@ if (isset($_GET["hid"])){
 					</div>
 						<div class="clearfix"> </div>
 				</div> -->
-				<nav class="numbering">
+				<!-- <nav class="numbering">
 					<ul class="pagination paging">
+
 						<li>
 							<a href="#" aria-label="Previous">
 								<span aria-hidden="true">&laquo;</span>
@@ -361,7 +394,41 @@ if (isset($_GET["hid"])){
 			</div>
 			<div class="clearfix"> </div>
 		</div>
-	</div>
+	</div> -->
+
+	 <nav class='numbering'>
+          <ul class='pagination paging'>
+          	<?php  
+          	if(!isset($_GET['hid'])){
+        echo 	"<li>
+          		<a href='product?page=".$prev."'aria-label='Previous'>
+                <span aria-hidden='true'>&laquo;</span>
+              	</a></li>";
+				 echo $pargination; 
+		echo "<li><a href='product?page=".$next."' aria-label='Next'>
+              <span aria-hidden='true'>&raquo;</span>
+              </a>
+	       </li>";
+	   }else{
+	   			echo 	"<li>
+          		<a href='product?hid=".$hid."&&page=".$prev."'aria-label='Previous'>
+                <span aria-hidden='true'>&laquo;</span>
+              	</a></li>";
+				 echo $pargination; 
+		echo "<li><a href='product?hid=".$hid."&&page=".$next."' aria-label='Next'>
+              <span aria-hidden='true'>&raquo;</span>
+              </a>
+	       </li>";
+	   }
+	       ?>
+          </ul>
+        </nav>
+      </div>
+      <div class='clearfix'> </div>
+    </div>
+  </div>
+
+
   <script type="text/javascript" src="js/product-ajax.js">
   </script>
 <!--- pakagedfoods --->

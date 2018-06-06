@@ -5,9 +5,22 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 <?php 
+$welcome = "";
 session_start();
 $sid = md5(session_id());
+$cart_numb = 0;
+if(isset($_SESSION['fullname']) && ($_SESSION['id'])){
+ 	$fullname = $_SESSION['fullname'];
+ 	$user_id = $_SESSION['id'];
+ 	$welcome ="<li><a href=''>welcome ".$fullname."</a></li>";
+
+ 	$cart_numb = getCart($conn, $user_id);	
+ 		
+ }
+
  ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,6 +64,7 @@ $sid = md5(session_id());
 			</div>
 			<div class="agile-login">
 				<ul>
+					<?php echo $welcome; ?>
 					<li><a href="register"> Create Account </a></li>
 					<li><a href='login'>Login</a></li>
 					<li><a href="contact">Help</a></li>
@@ -59,7 +73,7 @@ $sid = md5(session_id());
 				</ul>
 			</div>
 			<div class="product_list_header">
-		<?php echo '<a href="cart"><button class="w3view-cart" type="submit" name="submit" value=""><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button></a>' ?>
+		<?php echo "<li><a href='cart'>".$cart_numb."</a><a href='cart'><button class='w3view-cart' type='submit' name='submit' value=''><i class='fa fa-cart-arrow-down' aria-hidden='true'></i></button></a></li>" ?>
 			</div>
 			<div class="clearfix"> </div>
 		</div>
@@ -107,7 +121,7 @@ $sid = md5(session_id());
 								<ul class="nav navbar-nav">
 									<li class="active"><a href="home" class="act">Home</a></li>
 									<!-- Mega Menu -->
-									<?php  fetchMainCategory($conn) ?>
+									<?php  fetchMainCategory($conn); ?>
 								<!-- 	<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Groceries<b class="caret"></b></a>
 										<ul class="dropdown-menu multi-column columns-3">
