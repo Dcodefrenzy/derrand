@@ -10,6 +10,8 @@ if(!isset($_SESSION['id'])){
 	$user_id = $_SESSION['id'];
 	 
 }
+	
+	
 if(isset($_GET['hid'])){
 	$hash_id = $_GET['hid'];
 
@@ -29,7 +31,7 @@ if(isset($_GET['hid'])){
 			$clean = array_map('trim', $_POST);
 			$total_price = $clean['quantity'] * $price;
 
-			addToCart($conn, $user_id, $hash_id, $file_path, $product_name, $total_price, $clean);
+			addToCart($conn, $user_id, $hash_id, $product_name, $total_price, $clean);
 		}
 	}
 }
@@ -45,7 +47,7 @@ if(isset($_GET['hid'])){
  	</div>
  	<?php fetchPreviewProductroducts($conn, $hash_id) ?>
        				<form  method="post">						
-						<input type="text" name="quantity" placeholder="Quantity" required="" size="5"><br/><br/>
+						<input type="number" name="quantity" placeholder="Quantity" required="" size="5"><br/><br/>
 						<input type="submit" name="submit" value="Add to cart" class="button">
 					</form>
       					</div>

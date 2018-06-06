@@ -48,6 +48,10 @@ if(isset($_GET['cart_id'])){
   if(isset($_GET['cart_id'])){
     $cart_id = $_GET['cart_id'];
   }
+  $i = "";
+  if(isset($_GET['page'])){
+    $i = $_GET['page'];
+  }
 
 
 switch ($uri[1]) {
@@ -188,6 +192,14 @@ switch ($uri[1]) {
   include APP_PATH."/views/public/public_products.php";
   break;
 
+  case "product?hid=$hid&&page=$i":
+  include APP_PATH."/views/public/public_products.php";
+  break;
+
+  case "product?page=$i":
+  include APP_PATH."/views/public/public_products.php";
+  break;
+
   case "contact":
   include APP_PATH."/views/public/public_contact.php";
   break;
@@ -252,6 +264,9 @@ switch ($uri[1]) {
   break;
 
 
+ case "delete?cart_id=$cart_id":
+  include APP_PATH."/views/public/del_cart.php";
+  break;
 
 
   
