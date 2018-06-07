@@ -974,7 +974,7 @@ function showAllProducts($dbconn, $start, $record){
     </a>
     </div>
     <div class='snipcart-details top_brand_home_details'>
-    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
+    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Buy' class='button'></a>
     </div>
     </div>
     </figure>
@@ -1048,7 +1048,7 @@ function showProducts($dbconn, $hid, $start, $record){
     </a>
     </div>
     <div class='snipcart-details top_brand_home_details'>
-    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
+    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Buy' class='button'></a>
     </div>
     </div>
     </figure>
@@ -1156,7 +1156,7 @@ function userDisplayTopSelling($dbconn){
   while ($row = $stmt->fetch(PDO::FETCH_BOTH)){
     $count = $stmt->rowCount();
     extract($row);
-    echo     "<div class='col-md-4 top_brand_left'>
+    echo     "<div class='col-md-3 top_brand_left-1'>
     <div class='hover14 column'>
     <div class='agile_top_brand_left_grid'>
     <div class='agile_top_brand_left_grid_pos'>
@@ -1172,7 +1172,85 @@ function userDisplayTopSelling($dbconn){
     <div class='snipcart-details top_brand_home_details'>
     <form action='#'' method='post'>
     <fieldset>
-    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
+    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Buy' class='button'></a>
+    </fieldset>
+    </form>
+    </div>
+    </div>
+    </figure>
+    </div>
+    </div>
+    </div>
+    </div>";
+
+  }
+
+}
+function userDisplayPopularDemand($dbconn){
+  $top_selling = "popular-demand";
+
+  $stmt= $dbconn->prepare("SELECT * FROM product WHERE flag =:ts");
+  $stmt->bindParam(':ts', $top_selling);
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_BOTH)){
+    $count = $stmt->rowCount();
+    extract($row);
+    echo     "<div class='col-md-3 top_brand_left-1'>
+    <div class='hover14 column'>
+    <div class='agile_top_brand_left_grid'>
+    <div class='agile_top_brand_left_grid_pos'>
+    </div>
+    <div class='agile_top_brand_left_grid1'>
+    <figure>
+    <div class='snipcart-item block' >
+    <div class='snipcart-thumb'>
+    <a href='preview?hid=".$hash_id."'><img title=' ' alt=".$product_name." src=".$file_path." /></a>
+    <p>".$product_name."</p>
+    <h4>".$price." <span>".$old_price."</span></h4>
+    </div>
+    <div class='snipcart-details top_brand_home_details'>
+    <form action='#'' method='post'>
+    <fieldset>
+    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Buy' class='button'></a>
+    </fieldset>
+    </form>
+    </div>
+    </div>
+    </figure>
+    </div>
+    </div>
+    </div>
+    </div>";
+
+  }
+
+}
+function userDisplayNewOffers($dbconn){
+  $top_selling = "new-offers";
+
+  $stmt= $dbconn->prepare("SELECT * FROM product WHERE flag =:ts");
+  $stmt->bindParam(':ts', $top_selling);
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_BOTH)){
+    $count = $stmt->rowCount();
+    extract($row);
+    echo     "<div class='col-md-3 top_brand_left-1'>
+    <div class='hover14 column'>
+    <div class='agile_top_brand_left_grid'>
+    <div class='agile_top_brand_left_grid_pos'>
+    </div>
+    <div class='agile_top_brand_left_grid1'>
+    <figure>
+    <div class='snipcart-item block' >
+    <div class='snipcart-thumb'>
+    <a href='preview?hid=".$hash_id."'><img title=' ' alt=".$product_name." src=".$file_path." /></a>
+    <p>".$product_name."</p>
+    <h4>".$price." <span>".$old_price."</span></h4>
+    </div>
+    <div class='snipcart-details top_brand_home_details'>
+    <form action='#'' method='post'>
+    <fieldset>
+    <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Buy' class='button'></a>
     </fieldset>
     </form>
     </div>

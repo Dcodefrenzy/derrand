@@ -9,7 +9,7 @@ $link= "add_products";
 
 include 'include/header2.php';
 
-$flag = array("none", "top-selling", "popular-demand");
+$flag = array("none", "top-selling", "popular-demand","new-offers");
 $availability = array("1" =>"Available", "2" =>"Not Available");
 $promo = array("1" =>"On Promo", "2" =>"No Promo");
 $error = [];

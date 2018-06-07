@@ -94,22 +94,14 @@ if(isset($_SESSION['id']) && isset($_SESSION['username'])){
 		<div class="container">
 		<div class="w3ls_logo_products_left1">
 				<ul class="phone_email">
-					<li><i class="fa fa-phone" aria-hidden="true"></i>Order online or call us : (+0123) 234 567</li>
+					<li><i class="fa fa-phone" aria-hidden="true"></i>Order online or call us : +2348168785591</li>
 
 				</ul>
 			</div>
 			<div class="w3ls_logo_products_left">
 				<h1><a href="home">Store Name</a></h1>
 			</div>
-		<!-- <div class="w3l_search">
-			<form action="#" method="post">
-				<input type="search" name="Search" placeholder="Search for a Product..." required="">
-				<button type="submit" class="btn btn-default search" aria-label="Left Align">
-					<i class="fa fa-search" aria-hidden="true"> </i>
-				</button>
-				<div class="clearfix"></div>
-			</form>
-		</div> -->
+
 
 			<div class="clearfix"> </div>
 		</div>
@@ -131,6 +123,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username'])){
 							<div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
 								<ul class="nav navbar-nav">
 									<li class="active"><a href="home" class="act">Home</a></li>
+									<li class="active"><a href="product" class="act">All Categories</a></li>
 									<!-- Mega Menu -->
 									<?php  fetchMainCategory($conn); ?>
 

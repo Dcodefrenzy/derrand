@@ -58,7 +58,7 @@ if($cart_numb < 1){
  			<h2>Register Here</h2>
  			<div class='checkout-left'>
  				<div class="checkout-left-basket">
- 					<h4>Continue to basket</h4>
+ 					<a href="cart"><h4>Continue to Basket</h4></a>
  					<ul>
  						<?php displayCheckout($conn, $user_id); ?>
  					</ul>
