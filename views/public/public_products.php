@@ -25,12 +25,12 @@ if (isset($_GET["hid"])){
  		//to get total records
  	 $total_record = getTotalRecord($conn,  $record_per_page);
  	}
- 	
+
 
  	 //to get total record where category_id = id.
- 	 
- 		
- 		
+
+
+
  		if($page > 1){
  			$prev = $page - 1;
  		}else{
@@ -48,7 +48,7 @@ if (isset($_GET["hid"])){
 	<div class="breadcrumbs">
 		<div class="container">
 			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
-				<li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+				<li><a href="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
 				<li class="active">Packaged Foods</li>
 			</ol>
 		</div>
@@ -61,7 +61,7 @@ if (isset($_GET["hid"])){
 			<div class="col-md-8 products-right">
 				<div class="products-right-grid">
 					<div class="products-right-grids">
-						
+
 					</div>
 				</div>
 				<div class="agile_top_brands_grids">
@@ -398,13 +398,13 @@ if (isset($_GET["hid"])){
 
 	 <nav class='numbering'>
           <ul class='pagination paging'>
-          	<?php  
+          	<?php
           	if(!isset($_GET['hid'])){
         echo 	"<li>
           		<a href='product?page=".$prev."'aria-label='Previous'>
                 <span aria-hidden='true'>&laquo;</span>
               	</a></li>";
-				 echo $pargination; 
+				 echo $pargination;
 		echo "<li><a href='product?page=".$next."' aria-label='Next'>
               <span aria-hidden='true'>&raquo;</span>
               </a>
@@ -414,7 +414,7 @@ if (isset($_GET["hid"])){
           		<a href='product?hid=".$hid."&&page=".$prev."'aria-label='Previous'>
                 <span aria-hidden='true'>&laquo;</span>
               	</a></li>";
-				 echo $pargination; 
+				 echo $pargination;
 		echo "<li><a href='product?hid=".$hid."&&page=".$next."' aria-label='Next'>
               <span aria-hidden='true'>&raquo;</span>
               </a>

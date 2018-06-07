@@ -22,7 +22,7 @@ $empty_cart= "";
  	<div class="breadcrumbs">
  		<div class="container">
  			<ol class="breadcrumb breadcrumb1">
- 				<li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+ 				<li><a href="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
  				<li class="active">Checkout Page</li>
  			</ol>
  		</div>

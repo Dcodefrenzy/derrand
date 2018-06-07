@@ -1,4 +1,4 @@
-<?php
+home<?php
 ob_start();
 $page_title = "Register";
 include 'includes/header.php';
@@ -16,7 +16,7 @@ delALLCart($conn, $user_id);
  	<div class="breadcrumbs">
  		<div class="container">
  			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
- 				<li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+ 				<li><a href="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
  				<li class="active">Comfirmation</li>
  			</ol>
  		</div>

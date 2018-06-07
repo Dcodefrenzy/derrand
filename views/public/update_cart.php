@@ -8,10 +8,6 @@ include 'includes/header.php';
 				$error['quantity'] = "Please input a value";
 			}else{
 				$clean = array_map("trim",$_POST);
-
-
-
-
 				editCart($conn,$clean,$_GET['cart_id']);
 			}
 		}
