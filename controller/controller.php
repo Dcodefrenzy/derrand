@@ -83,11 +83,9 @@ function getProductsByID($dbconn, $productID) {
 
 
 
-function displayErrors($error, $field)
-{
+function displayErrors($error, $field){
   $result= "";
-  if (isset($error[$field]))
-  {
+  if (isset($error[$field])){
     $result = '<span class="err">'.$error[$field].'</span>';
   }
   return $result;
@@ -183,8 +181,8 @@ function viewProducts($dbconn){
     echo "<td>".$record['maker']."</td>";
     echo "<td>".$record['category']."</td>";
     echo "<td>".$record['sub_category']."</td>";
-    echo "<td>".$record['price']."</td>";
-    echo "<td>".$record['old_price']."</td>";
+    echo "<td>#".$record['price']."</td>";
+    echo "<td>#".$record['old_price']."</td>";
     echo "<td>".$record['availability']."</td>";
     echo "<td>".$record['promo_status']."</td>";
     echo "<td><a href=\"editProductImage?product_id=".$record['hash_id']."\"><div style=\"background:url('".$record['file_path']."'); height
@@ -199,8 +197,6 @@ function viewProducts($dbconn){
 
 
 function viewSubCategories($dbconn){
-
-
 
   $stmt = $dbconn->prepare("SELECT * FROM sub_category");
   $stmt->execute();
@@ -249,7 +245,7 @@ function viewCategory($dbconn){
 
 function editCategory($dbconn, $post, $get){
 $id = getIdByHashId($dbconn,'category_id','category_id','category',$get['id']);
-;
+
   $stmt = $dbconn->prepare("UPDATE category SET category_name=:name WHERE category_id= :id");
 
   $stmt->bindParam(":name" , $post['category']);
@@ -313,16 +309,9 @@ $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id
   $cal = $stmt->fetch(PDO::FETCH_BOTH);
   extract($cal);
 
-
-
   return $product_name;
 
-
-
-
 }
-
-
 
 
 
@@ -342,8 +331,6 @@ $id = getIdByHashId($dbconn,'category_id','category_id','category',$get['id']);
 }
 
 function deleteSubCategory($dbconn, $get){
-
-
 
   $stmt= $dbconn->prepare("DELETE FROM sub_category WHERE hash_id=:id");
 
@@ -466,8 +453,6 @@ $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id
 function editProducts($dbconn,$post,$get){
   $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id']);
 
-  // die(var_dump($id));
-
   $stmt = $dbconn->prepare("UPDATE product SET product_name=:pname, maker=:maker, description=:descr,category=:cat,sub_category=:subcat, availability=:av, promo_status=:prost, price=:pr, old_price=:opr,  flag=:flg WHERE product_id =:id");
 
   $data = [
@@ -501,34 +486,39 @@ function doesUserEmailExist($dbconn, $input){ #placeholders are just there
   }
   return $result;
 }
-function replaceImagePath($dbconn,$dest,$get){
-  $id = getIdByHashId($dbconn,'product_id','product_id','product',$get['product_id']);
+function replaceImagePath($dbconn,$dest,$fp, $get){
+  $old_image = $fp;
+  // die($get['product_id']);
 
-  // die(var_dump($id));
-  $stmt = $dbconn->prepare("UPDATE product SET file_path=:des WHERE product_id =:id");
+  try{
+  $stmt = $dbconn->prepare("UPDATE product SET file_path=:des WHERE hash_id =:id");
   $data = [
-    ':id' => $id,
+    ':id' => $get['product_id'],
     ':des' => $dest
   ];
   $stmt->execute($data);
+}catch(PDOException $e){
+  die("Could Not Upload Image At this time");
+}
+  unlink($old_image);
   $success = "Done";
-  header("Location: /products?success=$success");
+  header("Location:/products?success=$success");
 }
 
 
 
-function doUserRegister($dbconn, $input){
-  $hash = password_hash($input['hash'], PASSWORD_BCRYPT);
+function doUserRegister($dbconn, $input, $hid){
+  $hash = password_hash($input['pword'], PASSWORD_BCRYPT);
 
 
-  $stmt =$dbconn->prepare("INSERT INTO users(firstname,lastname,email,username,password,hash) VALUES(:fname, :lname, :em, :uname, :pword, :h)");
+$stmt =$dbconn->prepare("INSERT INTO users(firstname,lastname,email,username,hash, hash_id) VALUES(:fname, :lname, :em, :uname, :h, :hid)");
 
   $stmt->bindParam(":fname", $input['fname']);
   $stmt->bindParam(":lname", $input['lname']);
   $stmt->bindParam(":em", $input['email']);
   $stmt->bindParam(":uname", $input['uname']);
-  $stmt->bindParam(":pword", $input['pword']);
   $stmt->bindParam(":h", $hash);
+  $stmt->bindParam(":hid", $hid);
 
   $stmt->execute();
 
@@ -538,7 +528,7 @@ function doUserRegister($dbconn, $input){
 }
 
 
-function UserLogin($dbconn, $input){
+function userLogin($dbconn, $input){
   $result = [];
   $stmt = $dbconn->prepare("SELECT * FROM users WHERE email = :e ");
   $stmt ->bindParam(":e", $input['email']);
@@ -548,12 +538,24 @@ function UserLogin($dbconn, $input){
     extract($row);
     $_SESSION['username'] = $username;
     $_SESSION['id'] = $user_id;
-    header("Location:/home");
+    $_SESSION['email'] = $email;
+    $_SESSION['fullname'] = $firstname." ".$lastname;
+    $_SESSION['hash_id'] = $hash_id;
+    
   }else{
     $mes = "Invalid Email or Password";
     $message = preg_replace('/\s+/', '_', $mes);
     header("Location:/user_login?msg=$message");
   }
+}
+
+function update_user($dbconn, $hid, $input){
+  $stmt= $dbconn->prepare("UPDATE users SET hash_id = :hid WHERE email = :em");
+  $data = [
+        ':hid'=>$hid,
+        ':em'=>$input['email'],
+  ];
+  $stmt->execute($data);
 }
 
 function bestSellingProduct($dbconn){
@@ -565,6 +567,7 @@ function bestSellingProduct($dbconn){
   return $row;
 
 }
+
 
 function trending($dbconn){
   $td = "trending";
@@ -638,14 +641,21 @@ function firstPreview($dbconn) {
   return $stmt->fetch(PDO::FETCH_BOTH)[0];
 }
 
-function addToCart($dbconn, $userID, $productID, $input){
-  $stmt = $dbconn->prepare("INSERT INTO cart(quantity, user_id, product_id) VALUES(:qu, :ui, :bi)");
+function addToCart($dbconn, $userID, $productID,  $product, $productPrice, $input){
+    $rnd = rand(000000000000,99999999999);
+  $hash_id = 'cart'.$rnd;
+  $stmt = $dbconn->prepare("INSERT INTO cart(quantity, hash_id, user_id, product_name, product_price, product_id) VALUES(:qu, :crt, :ui,  :pn, :pp, :bi)");
 
   $data = [':qu'=> $input['quantity'],
+  ':crt' => $hash_id,
   ':ui' => $userID,
+  ':pn' => $product,
+  ':pp' => $productPrice,
   ':bi' => $productID,
+  
 ];
 $stmt->execute($data);
+header("Location:cart");
 }
 
 
@@ -659,6 +669,13 @@ function displayErrorsUser($dummy, $what) {
   }
   return $result;
 }
+ function updateCart($dbconn, $input, $hid){
+  $stmt = $dbconn->prepare("UPDATE cart SET user_id=:ui WHERE user_id= :hid");
+  $stmt->bindParam(":ui", $input);
+  $stmt->bindParam(":hid", $hid);
+  $stmt->execute();
+  header("Location:cart=".$user_id."");
+ }
 
 #function for editing items in the cart
 function editCart($dbconn, $cart){
@@ -683,23 +700,75 @@ function culNav($page){
   }
 }
 
-function delCart($dbconn, $cart) {
-
-  $stmt = $dbconn->prepare("DELETE FROM cart WHERE cart_id=:c");
-  $stmt->bindParam(":c", $cart);
+function delCart($dbconn, $userID, $cart) {
+  $result = "";
+  $stmt = $dbconn->prepare("DELETE FROM cart WHERE user_id=:uid && cart_id =:cid");
+  $stmt->bindParam(":uid", $userID);
+  $stmt->bindParam(":cid", $cart);
   $stmt->execute();
-
-  header("Location:/cart");
+  
 }
 
+function selectImageFromProduct($dbconn, $product_img){
+  $result = "";
+$stmt = $dbconn->prepare("SELECT file_path FROM product WHERE hash_id = :fp");
+$stmt->bindParam(':fp', $product_img);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_BOTH);
+$count= $stmt->rowCount();
+extract($row);
+ for ($i=0; $i < $count ; $i++) {  
+
+ $result .= "<a href='single.html'><img src=".$file_path." alt='' class='img-responsive' /></a>";
+}
+
+ return $result;
+  
+}
 
 function selectFromCart($dbconn, $userID){
+
   $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id=:id");
   $stmt->bindParam(':id', $userID);
   $stmt->execute();
+  while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+    extract($row);
 
-  return $stmt;
+     $img = selectImageFromProduct($dbconn, $product_id); 
+echo    "<tr class='rem1'>
+            <td class='invert'>".$cart_id."</td>";
+           
+    echo  "<td class='invert-image'>".$img."</td>
+            <td class='invert'>
+               <div class='quantity'>
+                <input type='text' placeholder=".$quantity." name='quantity' size='3'>
+                <input type='submit' value='Update' name='update' class='button' size='3'>
+
+                </div>
+              </div>
+            </td>
+            <td class='invert'>".$product_name."</td>
+
+            <td class='invert'>#".$product_price."</td>
+            <td class='invert'>
+              <div class='rem'>
+            <a href='delete?cart_id=".$cart_id."'><input type='submit' value='Update' name='delete' class='button' size='3'>
+              </div></a>
+            </td>
+          </tr>";
+  }  
 }
+function selectCart($dbconn, $userID){
+
+  $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id=:id");
+  $stmt->bindParam(':id', $userID);
+  $stmt->execute();
+  $row = $stmt->fetch(PDO::FETCH_BOTH);
+    return $row;
+
+  }
+
+
 
 
 # function to view comment or review by a user
@@ -735,18 +804,82 @@ function ViewReview($dbconn, $productid) {
   }
   return $result;
 }
+function viewpreviewProduct($dbconn, $hid){
+  $stmt = $dbconn->prepare("SELECT * FROM product WHERE hash_id = :hid");
+  $stmt->bindParam(":hid", $hid);
+  $stmt -> execute();
+  $row = $stmt->fetch(PDO::FETCH_BOTH);
+  return $row;
+}
 
-function fetchSubCategory($dbconn,$cid){
+function fetchPreviewProductroducts($dbconn, $hid){
 
-  $stmt = $dbconn->prepare("SELECT * FROM sub_category WHERE category_id = $cid");
-
-  $stmt->execute();
+  $stmt = $dbconn->prepare("SELECT * FROM product WHERE hash_id = :hid");
+  $stmt->bindParam(":hid", $hid);
+  $stmt -> execute();
 
   while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+          extract($row);
+
+  echo  "<div class='products'>
+            <div class='container'>
+              <div class='agileinfo_single'>
+
+              <div class='col-md-4 agileinfo_single_left'>
+                <img id='example' src=".$file_path." alt=".$product_name." class='img-responsive'>
+              </div>
+              <div class='col-md-8 agileinfo_single_right'>
+              <h2>".$product_name." </h2>
+             
+                <div class='w3agile_description'>
+                  <h4>Description :</h4>
+                  <p>".$description.".</p>
+                </div>
+                <div class='snipcart-item block'>
+                  <div class='snipcart-thumb agileinfo_single_right_snipcart'>
+                    <h4 class='m-sing'># ".$price." <span># ".$old_price."</span></h4>
+                  </div>
+                  <div class='snipcart-details agileinfo_single_right_details'>";
+
+
+          
+  }
+
+} 
+
+function fetchSubCategory($dbconn,$cid){
+  $stmt = $dbconn->prepare("SELECT * FROM sub_category WHERE category_id = $cid");
+  $stmt->execute();
+  while($row = $stmt->fetch(PDO::FETCH_BOTH)){
     extract($row);
-  echo '<li><a href="products.html"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$sub_category_name.'</a></li>';
+     // $product = fetchProducts($dbconn, $sub_category_id);
+    echo '<li><a href="/product?hid='.$sub_category_id.'"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$sub_category_name.'</a></li>';
+   
   }
 }
+
+  function fetchMainCategory($dbconn){
+    $stmt = $dbconn->prepare("SELECT * FROM category");
+    $stmt->execute();
+      while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+        extract($row);
+        
+    echo  "<li class='dropdown'>";
+     echo "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>".$category_name."<b class='caret'></b></a>
+            <ul class='dropdown-menu multi-column columns-3'>
+                      <div class='row'>
+                        <div class='multi-gd-img'>
+                          <ul class='multi-column-dropdown'>
+                            <h6>".$category_name."</h6>";
+                            fetchSubCategory($dbconn, $category_id);
+       echo               "</ul>
+                        </div>
+                      </div>
+                    </ul>
+                </li>";
+    }
+    
+  }
 
 function fetchSideCategory($dbconn){
   $stmt = $dbconn->prepare("SELECT * FROM category");
@@ -755,19 +888,258 @@ function fetchSideCategory($dbconn){
     extract($row);
     $categCount = count($category_id);
     for($i=0; $i<$categCount;$i++){
-      echo '<li><a href="products.html"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$category_name.'</a></li>';
+      echo '<li><a href="#"><i class="fa fa-arrow-right" aria-hidden="true"></i>'.$category_name.'</a></li>';
       echo '<ul>';
-
       fetchSubCategory($dbconn,$category_id);
       echo '</ul>';
     }
   }
 }
+function showAllProducts($dbconn, $start, $record){
+   $result = " ";
+    $stmt = $dbconn->prepare("SELECT * FROM product ORDER BY product_id DESC LIMIT $start, $record");
+   
+    $stmt -> execute();
+    while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+        extract($row);
+          $result .=   "<div class='col-md-4 top_brand_left'>";
+          $result .=   " <div class='hover14 column'>";
+            $result .=     "<div class='agile_top_brand_left_grid'>";
+            $result .=      "<div class=agile_top_brand_left_grid_pos>";
+            $result .=     "<a href='preview?hid=".$hash_id."'><img src='images/offer.png' alt='' class='img-responsive'></a>
+                            </div>
+                           <div class='agile_top_brand_left_grid1'>
+                             <figure>
+                                <div class='snipcart-item block'>
+                                  <div class='snipcart-thumb'> 
+                                    <a href='preview?hid=".$hash_id."'>
+                                   <img src=".$file_path." alt=".$product_name." class='img-responsive'>
+                                    <p>".$product_name."</p>
+                                    <h4># ".$price." <span># ".$old_price."</span></h4>
+                                    </a>
+                                </div>
+                              <div class='snipcart-details top_brand_home_details'>
+                              <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
+                                  </div>
+                                </div>
+                              </figure>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
+                }
+              return $result;
+        }
 
+        function getPaginationForAllProduct($dbconn,  $record){
+          $result = "";
+      $prev = "1";  
+      $next = "1"; 
+    $stmt= $dbconn->prepare("SELECT * FROM product ORDER BY product_id DESC");
+    $stmt->bindParam(':hid', $hid);
+    $stmt->execute();
+    $total_record=$stmt->rowCount();
+    
+    $total_pages = ceil($total_record/$record);
+    for ($i=1; $i <=$total_pages ; $i++) { 
 
-function fetchProducts($dbconn,$get){
-  $stmt = $dbconn->prepare("")
+       $result .= "<li class='active'><a href='product?page=".$i."'>".$i."</a></li>";
+    }
+    return $result;
 }
+
+function getTotalRecord($dbconn,  $record){
+   $stmt= $dbconn->prepare("SELECT * FROM product ORDER BY product_id DESC");
+    $stmt->execute();
+    $total_record=$stmt->rowCount();
+    
+    $total_pages = ceil($total_record/$record);
+    return $total_pages;
+
+}
+
+function getTotalRecordForProductId($dbconn, $hid,  $record){
+   $stmt= $dbconn->prepare("SELECT * FROM product WHERE sub_category = :hid ORDER BY product_id DESC");
+    $stmt->bindParam(':hid', $hid);
+    $stmt->execute();
+    $total_record=$stmt->rowCount();
+    
+    $total_pages = ceil($total_record/$record);
+    return $total_pages;
+
+}
+
+function showProducts($dbconn, $hid, $start, $record){
+    $result = " ";
+    $stmt = $dbconn->prepare("SELECT * FROM product WHERE sub_category = :hid ORDER BY product_id DESC LIMIT $start, $record");
+    $stmt->bindParam(':hid', $hid);
+    $stmt -> execute();
+    while($row = $stmt->fetch(PDO::FETCH_BOTH)){
+        extract($row);
+          $result .=   "<div class='col-md-4 top_brand_left'>";
+          $result .=   " <div class='hover14 column'>";
+          $result .=     "<div class='agile_top_brand_left_grid'>";
+          $result .=      "<div class=agile_top_brand_left_grid_pos>";
+          $result .=        "<img src='images/offer.png' alt=".$product_name."class='img-responsive'>
+                            </div>
+                           <div class='agile_top_brand_left_grid1'>
+                             <figure>
+                                <div class='snipcart-item block'>
+                                  <div class='snipcart-thumb'>
+                                   <a href='preview?hid=".$hash_id."'> 
+                                   <img src=".$file_path." alt=".$product_name." class='img-responsive'>
+                                    <p>".$product_name."</p>
+                                    <h4># ".$price." <span># ".$old_price."</span></h4>
+                                    </a>
+                                </div>
+                              <div class='snipcart-details top_brand_home_details'>
+                              <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
+                                  </div>
+                                </div>
+                              </figure>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
+
+
+    }
+    return $result;
+    
+}
+
+function getPagination($dbconn, $hid, $record){
+      $result = "";
+      $prev = "1";   
+    $stmt= $dbconn->prepare("SELECT * FROM product WHERE sub_category = :hid ORDER BY product_id DESC");
+    $stmt->bindParam(':hid', $hid);
+    $stmt->execute();
+    $total_record=$stmt->rowCount();
+    $total_pages = ceil($total_record/$record);
+    for ($i=1; $i <=$total_pages ; $i++) { 
+  $result  .=   "<li class='active'><a href=product?hid=$hid&&page=".$i.">".$i."<span class='sr-only'>(current)</span></a></li>";
+    }
+   
+    return $result;
+    var_dump($result);
+
+}
+
+function getProductsFromCart($dbconn, $userID){
+  $result = " ";
+  $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id = :uid");
+  $stmt->bindParam(":uid", $userID);
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_BOTH)){
+    extract($row);
+    //$result = implode(" ", $row);
+    $result .= "<p>".$product_name.", ".$file_path.", #".$product_price.", ".$product_id."</p>";
+    /*$count_result = count($result);
+    if($count_result < 0){
+      header("Location:home");
+    }*/
+    
+}
+return $result;
+
+}
+
+
+
+function addCheckout($dbconn, $userID, $input){
+  //Invocked get product from cart
+   $result = getProductsFromCart($dbconn, $userID);
+  $stmt = $dbconn->prepare("INSERT INTO checkout(name, phone_number, adress, product_info, user_id, date_added) VALUES(:na, :ph, :ad, :pi, :uid, NOW())");
+      $data = [
+        ':na' => $input['fname'],
+        ':ph' => $input['pnumber'],
+        ':ad' => $input['adress'],
+        ':pi' => $result,
+        ':uid' =>$userID,
+      ];
+      $stmt->execute($data);
+      $user_id = $userID;
+      header("Location:comfirmation?user_id=$user_id");
+  }
+
+
+  
+
+function displayCheckout($dbconn, $userID){
+  $total_price = 0;
+    $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id = :uid");
+  $stmt->bindParam(":uid", $userID);
+  $stmt->execute();
+  while($result = $stmt->fetch(PDO::FETCH_BOTH)){
+   
+    extract($result);
+    $total_price += $product_price;
+    $product_count = count($product_price);
+    for ($i=0; $i < $product_count ; $i++) { 
+
+      echo "<li>".$product_name." <i>-</i> <span>#".$product_price." </span></li>";
+            
+    }
+
+  }
+  echo "<li><h5>Total <i>-</i> <span>#".$total_price."</span></h5></li>";
+}
+function get_page($dbconn, $start){
+  $stmt = $dbconn->prepare("SELECT * FROM product ORDER BY product_id DESC LIMIT $start");
+}
+
+
+function userDisplayTopSelling($dbconn){
+          $top_selling = "top-selling";
+
+          $stmt= $dbconn->prepare("SELECT * FROM product WHERE flag =:ts");
+          $stmt->bindParam(':ts', $top_selling);
+          $stmt->execute();
+          while ($row = $stmt->fetch(PDO::FETCH_BOTH)){
+          $count = $stmt->rowCount();
+          extract($row);
+      echo     "<div class='col-md-4 top_brand_left'>
+                  <div class='hover14 column'>
+                    <div class='agile_top_brand_left_grid'>
+                      <div class='agile_top_brand_left_grid_pos'>
+                      </div>
+                      <div class='agile_top_brand_left_grid1'>
+                        <figure>
+                          <div class='snipcart-item block' >
+                            <div class='snipcart-thumb'>
+                              <a href='preview?hid=".$hash_id."'><img title=' ' alt=".$product_name." src=".$file_path." /></a>
+                              <p>".$product_name."</p>
+                              <h4>".$price." <span>".$old_price."</span></h4>
+                            </div>
+                            <div class='snipcart-details top_brand_home_details'>
+                              <form action='#'' method='post'>
+                                <fieldset>
+                                  <a href='preview?hid=".$hash_id."'><input type='submit' name='submit' value='Preview' class='button'></a>
+                                </fieldset>
+                              </form>
+                            </div>
+                          </div>
+                        </figure>
+                      </div>
+                    </div>
+                  </div>
+                </div>";
+
+          }
+        
+      }
+
+    function getCart($dbconn,$user){
+      $stmt = $dbconn->prepare("SELECT * FROM cart WHERE user_id = :ui");
+      $stmt->bindParam(':ui', $user);
+      $stmt->execute();
+      $count = $stmt->rowCount();
+      var_dump($count);
+      return $count;
+
+    }
+
+
 
 
 ?>

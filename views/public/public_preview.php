@@ -2,6 +2,39 @@
 ob_start();
 $page_title = "Preview";
 include 'includes/header.php';
+	
+if(!isset($_SESSION['id'])){
+	$user_id = $sid;
+	
+}else{
+	$user_id = $_SESSION['id'];
+	 
+}
+	
+	
+if(isset($_GET['hid'])){
+	$hash_id = $_GET['hid'];
+
+	 $result = viewpreviewProduct($conn, $hash_id);
+	 extract($result); 
+
+	$error = [];
+
+	if(array_key_exists("submit", $_POST)){
+		if(empty($_POST['quantity'])){
+			$error['quantity'] = "Please add quantity";
+		}
+		if(!is_numeric($_POST['quantity'])){
+			$error['quantity'] = "Please add numeric value";
+		}
+		if(empty($error)){
+			$clean = array_map('trim', $_POST);
+			$total_price = $clean['quantity'] * $price;
+
+			addToCart($conn, $user_id, $hash_id, $product_name, $total_price, $clean);
+		}
+	}
+}
  ?>
  <!-- breadcrumbs -->
  	<div class="breadcrumbs">
@@ -12,8 +45,20 @@ include 'includes/header.php';
  			</ol>
  		</div>
  	</div>
+ 	<?php fetchPreviewProductroducts($conn, $hash_id) ?>
+       				<form  method="post">						
+						<input type="number" name="quantity" placeholder="Quantity" required="" size="5"><br/><br/>
+						<input type="submit" name="submit" value="Add to cart" class="button">
+					</form>
+      					</div>
+    				</div>
+  				</div>
+  			<div class='clearfix'> </div>
+		</div>
+	</div>
+</div>
  <!-- //breadcrumbs -->
- 	<div class="products">
+ <!-- 	<div class="products">
  		<div class="container">
  			<div class="agileinfo_single">
 
@@ -68,7 +113,7 @@ include 'includes/header.php';
  				<div class="clearfix"> </div>
  			</div>
  		</div>
- 	</div>
+ 	</div> -->
  <!-- new -->
  	<div class="newproducts-w3agile">
  		<div class="container">

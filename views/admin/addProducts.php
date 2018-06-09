@@ -3,23 +3,15 @@ ob_start();
 session_start();
 authenticate();
 $_SESSION['active'] = true;
-
 #Links to the header2.php
 $page_title = "Add Products";
 $link= "add_products";
 
-
-
-
 include 'include/header2.php';
-
-
 
 $flag = array("none", "top-selling", "popular-demand");
 $availability = array("1" =>"Available", "2" =>"Not Available");
 $promo = array("1" =>"On Promo", "2" =>"No Promo");
-
-
 $error = [];
 
 if(array_key_exists('add', $_POST)){
@@ -80,36 +72,18 @@ if(array_key_exists('add', $_POST)){
     $error['pic'] = "file size exceeds maximum. maximum:".MAX_FILE_SIZE;
   }
 
-
-
-
-
   if(!in_array($_FILES['pic']['type'], $ext)){
     $error['pic'] = "Invalid file type";
-
-
   }
 
   if(empty($error)){
-
-
     $ver = compressImage($_FILES, 'pic',80, 'uploads/');
-
-      $destination = $ver;
   $clean = array_map('trim', $_POST);
 // var_dump($clean);
-  addProducts($conn,$clean,$destination);
-
+  addProducts($conn,$clean,$ver);
 }
-
 }
-
-
-
-
-
  ?>
-
  <?php if(isset($_GET['success'])){
    $msg = str_replace('_', ' ', $_GET['success']);
    echo $msg;
@@ -142,9 +116,6 @@ if(array_key_exists('add', $_POST)){
 <label for="">PRODUCER </label>
  <input type="text" name="maker" value="" placeholder="Producer">
 </div>
-
-
-
 
 <div class="">
   <?php  $display = displayErrors($error, 'category');
@@ -226,18 +197,20 @@ if(array_key_exists('add', $_POST)){
 
 
 </div>
+<br>
+<br>
+<br>
 <script type="text/javascript">
 function getSub(id){
 
   var url = 'getSubCategory';
   var method = 'POST';
   var params = 'cat_id='+ id;
-
   ////console.log(url);
-  contactAjax(url, method, params);
+  subAjax(url, method, params);
 }
 
-function contactAjax(url, method, params){
+function subAjax(url, method, params){
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function(){
     if(xhr.readyState == 4){

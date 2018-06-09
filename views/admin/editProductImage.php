@@ -41,14 +41,12 @@ if(array_key_exists('add', $_POST)){
 
   if(!in_array($_FILES['pic']['type'], $ext)){
     $error['pic'] = "Invalid file type";
-
-
   }
 
   if(empty($error)){
-    unlink($file_path);
+    // die(var_dump($file_path));
   $ver = compressImage($_FILES, 'pic' ,80, 'uploads/');
-  replaceImagePath($conn, $ver,$_GET);
+  replaceImagePath($conn, $ver, $file_path, $_GET);
   }else{
   foreach ($error as $err){
     echo $err;
@@ -70,8 +68,7 @@ if(array_key_exists('add', $_POST)){
 <div class="wrapper">
  <h2>PLEASE SELECT FILE</h2>
 <form id="register" action="" method="POST" enctype="multipart/form-data">
-  <div style="background:url('<?php echo $file_path?>'); height
-  :200px; width: 200px; background-size: cover; background-position: center; background-repeat: no-repeat;" class="">
+  <div style="background:url('<?php echo $file_path?>'); height:200px; width: 200px; background-size: cover; background-position: center; background-repeat: no-repeat;" class="">
 
   </div>
   <div class="">

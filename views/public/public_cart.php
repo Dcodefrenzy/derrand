@@ -2,6 +2,25 @@
 ob_start();
 $page_title = "Cart";
 include 'includes/header.php';
+$empty_cart= "";
+
+ if(!isset($_SESSION['id'])){
+ 	$user_id = $sid;
+ 	if($row = selectCart($conn, $user_id)){
+ 	extract($row);
+ 	
+ 	}
+ }elseif(isset($_SESSION['id'])){
+ 	$user_id = $_SESSION['id'];
+ 	
+ 		if($row = selectCart($conn, $user_id)){
+ 		extract($row);
+ 		}
+	}else{
+ 		$empty_cart = "<a href='product'>You Do not have any cart, click here to add to cart</a>";
+ 	}	
+ 
+
  ?>
  <!-- breadcrumbs -->
  	<div class="breadcrumbs">
@@ -17,6 +36,7 @@ include 'includes/header.php';
  	<div class="checkout">
  		<div class="container">
  			<h2>Your shopping cart contains: <span>3 Products</span></h2>
+ 			<?php echo '<p>'.$empty_cart.'</p>'; ?>
  			<div class="checkout-right">
  				<table class="timetable_sub">
  					<thead>
@@ -30,7 +50,9 @@ include 'includes/header.php';
  							<th>Remove</th>
  						</tr>
  					</thead>
- 					<tr class="rem1">
+ 					<?php selectFromCart($conn, $user_id); ?>
+ 					
+ 					<!-- <tr class="rem1">
  						<td class="invert">1</td>
  						<td class="invert-image"><a href="single.html"><img src="images/1.png" alt=" " class="img-responsive" /></a></td>
  						<td class="invert">
@@ -58,8 +80,8 @@ include 'includes/header.php';
  								});
  						   </script>
  						</td>
- 					</tr>
- 					<tr class="rem2">
+ 					</tr> -->
+ 					<!-- <tr class="rem2">
  						<td class="invert">2</td>
  						<td class="invert-image"><a href="single.html"><img src="images/2.png" alt=" " class="img-responsive" /></a></td>
  						<td class="invert">
@@ -116,24 +138,17 @@ include 'includes/header.php';
  								});
  						   </script>
  						</td>
- 					</tr>
- 								<!--quantity-->
- 									<script>
- 									$('.value-plus').on('click', function(){
- 										var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10)+1;
- 										divUpd.text(newVal);
- 									});
-
- 									$('.value-minus').on('click', function(){
- 										var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10)-1;
- 										if(newVal>=1) divUpd.text(newVal);
- 									});
- 									</script>
- 								<!--quantity-->
+ 					</tr> -->
+ 							
  				</table>
  			</div>
- 			<div class="checkout-left">
- 				<div class="checkout-left-basket">
+ 			<div class='checkout-left'>
+ 				<div class='checkout-left-basket'>
+ 					<div class='snipcart-details top_brand_home_details'>
+ 				<?php echo "<a href='checkout?cart_id=".$cart_id."'><input type='submit' class='button' value='Checkout' aria-hidden='true'></a>" ?>
+ 				</div>
+ 				</div>
+ 				<!-- <div class="checkout-left-basket">
  					<h4>Continue to basket</h4>
  					<ul>
  						<li>Product1 <i>-</i> <span>$15.00 </span></li>
@@ -142,15 +157,15 @@ include 'includes/header.php';
  						<li>Total Service Charges <i>-</i> <span>$15.00</span></li>
  						<li>Total <i>-</i> <span>$84.00</span></li>
  					</ul>
- 				</div>
+ 				</div> -->
  				<div class="checkout-right-basket">
- 					<a href="single.html"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Continue Shopping</a>
+ 					<a href="home"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Continue Shopping</a>
  				</div>
  				<div class="clearfix"> </div>
  			</div>
  		</div>
  	</div>
- <!-- //checkout -->
+ <!-- //checkout
  <?php
 include 'includes/footer.php';
   ?>
