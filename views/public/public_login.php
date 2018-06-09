@@ -3,26 +3,23 @@ ob_start();
 $page_title = "Login";
 include 'includes/header.php';
 
-  $user_id = $sid;
 
-$error =  []; 
+$error =  [];
 if(array_key_exists('login', $_POST)){
 
   if(empty($_POST['email'])){
     $error['email'] = "Please enter email";
   }
+
   if(empty($_POST['hash'])){
     $error['hash'] = "please enter password";
   }
 
   if(empty($error)){
     $clean = array_map('trim', $_POST);
-
-    userLogin($conn, $clean);
+    userLogin($conn,$sid, $clean);
   }
 
-  update_user($conn, $user_id, $clean); 
-  header("Location:/home");  
 }
 
 
@@ -31,7 +28,7 @@ if(array_key_exists('login', $_POST)){
  	<div class="breadcrumbs">
  		<div class="container">
  			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
- 				<li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+ 				<li><a href="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
  				<li class="active">Login Page</li>
  			</ol>
  		</div>
